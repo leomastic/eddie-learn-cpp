@@ -57,26 +57,34 @@ bool hasVeryLowSubject(const Student& student) {
 }
 
 bool isPassed(const Student& student) {
-    return !hasVeryLowSubject(student)
-           && student.mathScore >= 40
-           && student.scienceScore >= 40
-           && student.codingScore >= 40
-           && calculateAverage(student) >= 60.0;
+    return calculateAverage(student) >= 60.0 &&
+           !hasVeryLowSubject(student);
 }
 
 char calculateGrade(const Student& student) {
-    double average = calculateAverage(student);
-    if (average >= 90) {
-        return 'A';
-    } else if (average >= 80) {
-        return 'B';
-    } else if (average >= 70) {
-        return 'C';
-    } else if (average >= 60) {
-        return 'D';
-    } else {
+    if (!isPassed(student)) {
         return 'F';
     }
+
+    double average = calculateAverage(student);
+
+    if (average >= 90.0) {
+        return 'A';
+    }
+
+    if (average >= 80.0) {
+        return 'B';
+    }
+
+    if (average >= 70.0) {
+        return 'C';
+    }
+
+    if (average >= 60.0) {
+        return 'D';
+    }
+
+    return 'F';
 }
 
 bool isExcellent(const Student& student) {
