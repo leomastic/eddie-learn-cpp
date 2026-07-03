@@ -26,23 +26,23 @@ int readIntInRange(std::string prompt, int minValue, int maxValue) {
     int value;
 
     while (true) {
-        std::cout << prompt << std::endl;
+        std::cout << prompt;
 
-        if(!(std::cin >> value)) {
-            std::cout << "Invalid value. Please enter again.";
+        if (!(std::cin >> value)) {
+            std::cout << "Invalid input. Please enter an integer." << std::endl;
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             continue;
         }
 
-        if(value < minValue || value > maxValue) {
-            std::cout << "Invalid value. Please enter a value from" << minValue
-                                                                    << " to " << maxValue;
+        if (value < minValue || value > maxValue) {
+            std::cout << "Invalid value. Please enter a value from "
+                      << minValue << " to " << maxValue << std::endl;
             continue;
         }
-    }
 
-    return value;
+        return value;
+    }
 }
 
 Student readStudent(int studentNumber) {
@@ -75,7 +75,7 @@ bool isPassed(const Student& student) {
 
 Grade calculateGrade(const Student& student) {
     if (!isPassed(student)) {
-        return Grade::A;
+        return Grade::F;
     }
 
     double average = calculateAverage(student);
