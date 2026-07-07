@@ -2,6 +2,13 @@
 #include <string>
 #include <vector>
 
+enum class MissionType {
+    Exploration,
+    Rescue,
+    Supply,
+    Defense
+};
+
 struct Spaceship {
     std::string name;
     int fuelLevel;
@@ -26,13 +33,6 @@ enum class ShipStatus {
     Ready,
     NeedsMaintenance,
     OutOfService
-};
-
-enum class MissionType {
-    Exploration,
-    Rescue,
-    Supply,
-    Defense
 };
 
 enum class MissionRisk {
@@ -140,6 +140,22 @@ Spaceship readSpaceship(int shipNumber) {
     return ship;
 }
 
+MissionType missionTypeFromCode(int typeCode) {
+    if (typeCode == 1) {
+        return MissionType::Exploration;
+    }
+
+    if (typeCode == 2) {
+        return MissionType::Rescue;
+    }
+
+    if (typeCode == 3) {
+        return MissionType::Supply;
+    }
+
+    return MissionType::Defense;
+}
+
 Mission readMission(int missionNumber) {
     Mission mission;
 
@@ -175,22 +191,6 @@ ShipStatus calculateShipStatus(const Spaceship& ship) {
     }
 
     return ShipStatus::Ready;
-}
-
-MissionType missionTypeFromCode(int typeCode) {
-    if (typeCode == 1) {
-        return MissionType::Exploration;
-    }
-
-    if (typeCode == 2) {
-        return MissionType::Rescue;
-    }
-
-    if (typeCode == 3) {
-        return MissionType::Supply;
-    }
-
-    return MissionType::Defense;
 }
 
 MissionRisk calculateMissionRisk(const Mission& mission) {
@@ -460,14 +460,14 @@ void printFleetReport(const std::vector<Spaceship>& ships) {
 
     for (int i = 0; i < ships.size(); ++i) {
         const Spaceship& ship = ships[i];
-        std::cout << "\nShip " << (i + 1) << ": " << ship.name << std::endl;
-        std::cout << "  Fuel level: " << ship.fuelLevel << std::endl;
-        std::cout << "  Engine health: " << ship.engineHealth << std::endl;
-        std::cout << "  Shield power: " << ship.shieldPower << std::endl;
-        std::cout << "  Crew capacity: " << ship.crewCapacity << std::endl;
-        std::cout << "  Cargo capacity: " << ship.cargoCapacity << std::endl;
-        std::cout << "  Medical bay: " << (ship.hasMedicalBay ? "Yes" : "No") << std::endl;
-        std::cout << "  Status: " << shipStatusToString(calculateShipStatus(ship)) << std::endl;
+        std::cout << "\nShip " << (i + 1) << ": " << ship.name;
+        std::cout << "  Fuel level: " << ship.fuelLevel;
+        std::cout << "  Engine health: " << ship.engineHealth;
+        std::cout << "  Shield power: " << ship.shieldPower;
+        std::cout << "  Crew capacity: " << ship.crewCapacity;
+        std::cout << "  Cargo capacity: " << ship.cargoCapacity;
+        std::cout << "  Medical bay: " << (ship.hasMedicalBay ? "Yes" : "No");
+        std::cout << "  Status: " << shipStatusToString(calculateShipStatus(ship));
     }
 }
 
@@ -480,21 +480,21 @@ void printMissionReport(
 
     for (int i = 0; i < missions.size(); ++i) {
         const Mission& mission = missions[i];
-        std::cout << "\nMission " << (i + 1) << ": " << mission.name << std::endl;
-        std::cout << "  Type: " << missionTypeToString(mission.type) << std::endl;
-        std::cout << "  Required crew: " << mission.requiredCrew << std::endl;
-        std::cout << "  Required cargo: " << mission.requiredCargo << std::endl;
-        std::cout << "  Distance: " << mission.distance << std::endl;
-        std::cout << "  Danger level: " << mission.dangerLevel << std::endl;
-        std::cout << "  Medical support required: " << (mission.needsMedicalSupport ? "Yes" : "No") << std::endl;
-        std::cout << "  Risk: " << missionRiskToString(calculateMissionRisk(mission)) << std::endl;
+        std::cout << "\nMission " << (i + 1) << ": " << mission.name;
+        std::cout << "  Type: " << missionTypeToString(mission.type);
+        std::cout << "  Required crew: " << mission.requiredCrew;
+        std::cout << "  Required cargo: " << mission.requiredCargo;
+        std::cout << "  Distance: " << mission.distance;
+        std::cout << "  Danger level: " << mission.dangerLevel;
+        std::cout << "  Medical support required: " << (mission.needsMedicalSupport ? "Yes" : "No");
+        std::cout << "  Risk: " << missionRiskToString(calculateMissionRisk(mission));
         AssignmentDecision decision = calculateAssignmentDecision(ships, mission);
-        std::cout << "  Assignment decision: " << assignmentDecisionToString(decision) << std::endl;
+        std::cout << "  Assignment decision: " << assignmentDecisionToString(decision);
 
         if (decision == AssignmentDecision::Assign) {
             int bestShipIndex = findBestShipIndexForMission(ships, mission);
             if (bestShipIndex >= 0) {
-                std::cout << "  Best ship: " << ships[bestShipIndex].name << std::endl;
+                std::cout << "  Best ship: " << ships[bestShipIndex].name;
             }
         }
     }
