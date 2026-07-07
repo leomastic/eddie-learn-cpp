@@ -460,14 +460,14 @@ void printFleetReport(const std::vector<Spaceship>& ships) {
 
     for (int i = 0; i < ships.size(); ++i) {
         const Spaceship& ship = ships[i];
-        std::cout << "\nShip " << (i + 1) << ": " << ship.name;
-        std::cout << "  Fuel level: " << ship.fuelLevel;
-        std::cout << "  Engine health: " << ship.engineHealth;
-        std::cout << "  Shield power: " << ship.shieldPower;
-        std::cout << "  Crew capacity: " << ship.crewCapacity;
-        std::cout << "  Cargo capacity: " << ship.cargoCapacity;
-        std::cout << "  Medical bay: " << (ship.hasMedicalBay ? "Yes" : "No");
-        std::cout << "  Status: " << shipStatusToString(calculateShipStatus(ship));
+        std::cout << "\nShip " << (i + 1) << ": " << ship.name << " | ";
+        std::cout << "  Fuel level: " << ship.fuelLevel << " | ";
+        std::cout << "  Engine health: " << ship.engineHealth << " | ";
+        std::cout << "  Shield power: " << ship.shieldPower << " | ";
+        std::cout << "  Crew capacity: " << ship.crewCapacity << " | ";
+        std::cout << "  Cargo capacity: " << ship.cargoCapacity << " | ";
+        std::cout << "  Medical bay: " << (ship.hasMedicalBay ? "Yes" : "No") << " | ";
+        std::cout << "  Status: " << shipStatusToString(calculateShipStatus(ship)) << " | ";
     }
 }
 
@@ -480,21 +480,21 @@ void printMissionReport(
 
     for (int i = 0; i < missions.size(); ++i) {
         const Mission& mission = missions[i];
-        std::cout << "\nMission " << (i + 1) << ": " << mission.name;
-        std::cout << "  Type: " << missionTypeToString(mission.type);
-        std::cout << "  Required crew: " << mission.requiredCrew;
-        std::cout << "  Required cargo: " << mission.requiredCargo;
-        std::cout << "  Distance: " << mission.distance;
-        std::cout << "  Danger level: " << mission.dangerLevel;
-        std::cout << "  Medical support required: " << (mission.needsMedicalSupport ? "Yes" : "No");
-        std::cout << "  Risk: " << missionRiskToString(calculateMissionRisk(mission));
+        std::cout << "\nMission " << (i + 1) << ": " << mission.name << " | ";
+        std::cout << "  Type: " << missionTypeToString(mission.type) << " | ";
+        std::cout << "  Required crew: " << mission.requiredCrew << " | ";
+        std::cout << "  Required cargo: " << mission.requiredCargo << " | ";
+        std::cout << "  Distance: " << mission.distance << " | ";
+        std::cout << "  Danger level: " << mission.dangerLevel << " | ";
+        std::cout << "  Medical support required: " << (mission.needsMedicalSupport ? "Yes" : "No") << " | ";
+        std::cout << "  Risk: " << missionRiskToString(calculateMissionRisk(mission)) << " | ";
         AssignmentDecision decision = calculateAssignmentDecision(ships, mission);
-        std::cout << "  Assignment decision: " << assignmentDecisionToString(decision);
+        std::cout << "  Assignment decision: " << assignmentDecisionToString(decision) << " | ";
 
         if (decision == AssignmentDecision::Assign) {
             int bestShipIndex = findBestShipIndexForMission(ships, mission);
             if (bestShipIndex >= 0) {
-                std::cout << "  Best ship: " << ships[bestShipIndex].name;
+                std::cout << "  Best ship: " << ships[bestShipIndex].name << " | ";
             }
         }
     }
