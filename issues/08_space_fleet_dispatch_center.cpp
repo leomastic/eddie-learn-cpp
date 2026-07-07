@@ -14,7 +14,7 @@ struct Spaceship {
 
 struct Mission {
     std::string name;
-    int typeCode;
+    MissionType type;
     int requiredCrew;
     int requiredCargo;
     double distance;
@@ -97,27 +97,27 @@ double readDoubleInRange(std::string prompt, double minValue, double maxValue) {
 }
 
 bool readYesNo(std::string prompt) {
-    bool value;
+    int value;
 
     while (true) {
         std::cout << prompt << " (1 for yes, 0 for no): ";
 
-        if(!(std::cin >> value)) {
-            std::cout << "Invalid value. Please enter a valid value." << std::endl;
+        if (!(std::cin >> value)) {
+            std::cout << "Invalid input. Enter 1 or 0." << std::endl;
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             continue;
         }
 
-        if(value == 1) {
+        if (value == 1) {
             return true;
         }
 
-        if(value == 0) {
+        if (value == 0) {
             return false;
         }
 
-        std::cout << "Please enter 1 or 0.";
+        std::cout << "Please enter 1 or 0." << std::endl;
     }
 }
 
@@ -149,12 +149,13 @@ Mission readMission(int missionNumber) {
     std::cout << "Mission name (no space): ";
     std::cin >> mission.name;
 
-    mission.typeCode = readIntInRange(
+    int typeCode = readIntInRange(
         "Mission type (1=Exploration, 2=Rescue, 3=Supply, 4=Defense): ",
         1,
         4
     );
 
+    mission.type = missionTypeFromCode(typeCode);
     mission.requiredCrew = readIntInRange("Required crew (1-20): ", 1, 20);
     mission.requiredCargo = readIntInRange("Required cargo (0-1000): ", 0, 1000);
     mission.distance = readDoubleInRange("Distance (1-10000): ", 1.0, 10000.0);
@@ -210,7 +211,7 @@ MissionRisk calculateMissionRisk(const Mission& mission) {
 
 std::string shipStatusToString(ShipStatus status) {
     if(status == ShipStatus::NeedsMaintenance) {
-        return "Needs main enance";
+        return "Needs maintenance";
     }
 
     if(status == ShipStatus::OutOfService) {
@@ -267,7 +268,7 @@ std::string assignmentDecisionToString(AssignmentDecision decision) {
 bool canHandleMission(const Spaceship& ship, const Mission& mission) {
     ShipStatus status = calculateShipStatus(ship);
     MissionRisk risk = calculateMissionRisk(mission);
-    MissionType type = missionTypeFromCode(mission.typeCode);
+    MissionType type = mission.type;
 
     if (status == ShipStatus::OutOfService) {
         return false;
@@ -480,7 +481,7 @@ void printMissionReport(
     for (int i = 0; i < missions.size(); ++i) {
         const Mission& mission = missions[i];
         std::cout << "\nMission " << (i + 1) << ": " << mission.name << std::endl;
-        std::cout << "  Type: " << missionTypeToString(missionTypeFromCode(mission.typeCode)) << std::endl;
+        std::cout << "  Type: " << missionTypeToString(mission.type) << std::endl;
         std::cout << "  Required crew: " << mission.requiredCrew << std::endl;
         std::cout << "  Required cargo: " << mission.requiredCargo << std::endl;
         std::cout << "  Distance: " << mission.distance << std::endl;
@@ -547,4 +548,8 @@ int main() {
     return 0;
 }
 
-//Dòng này là 550 dòng =)
+
+
+
+
+//Dòng này là 555 dòng =)
