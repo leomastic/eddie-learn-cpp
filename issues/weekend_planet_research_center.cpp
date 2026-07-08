@@ -49,7 +49,7 @@ int readIntInRange(std::string prompt, int minValue, int maxValue) {
         std::cout << prompt << std::endl;
 
         if(!(std::cin >> value)) {
-            std::cout << "Invaild value. Please enter a valid value.";
+            std::cout << "Invalid value. Please enter a valid value.";
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             continue;
@@ -73,7 +73,7 @@ double readDoubleInRange(std::string prompt, double minValue, double maxValue) {
         std::cout << prompt << std::endl;
 
         if(!(std::cin >> value)) {
-            std::cout << "Invaild value. Please enter a valid value.";
+            std::cout << "Invalid value. Please enter a valid value.";
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             continue;
@@ -125,9 +125,9 @@ Planet readPlanet(int index) {
     std::cin >> planet.name;
 
     planet.gravity = readDoubleInRange("Planet gravity Level (0.0 --> 100.0): ", 0.0, 100.0);
-    planet.oxygenLevel = (int)readDoubleInRange("Planet oxygen level (0.0 --> 100.0): ", 0.0, 100.0);
+    planet.oxygenLevel = readIntInRange("Planet oxygen level (0 --> 100): ", 0, 100);
     planet.temperature = readDoubleInRange("Planet temperature (|-273.0| --> 100000000.0): ", -273.0, 100000000.0);
-    planet.waterLevel = (int)readDoubleInRange("Planet water level (1 --> 100): ", 1, 100);
+    planet.waterLevel = readIntInRange("Planet water level (1 --> 100): ", 1, 100);
     planet.hasLife = readYesNo("Planet has life? ");
     planet.weather = readWeather();
 
@@ -135,17 +135,17 @@ Planet readPlanet(int index) {
 }
 
 PlanetClass calculatePlanetClass(const Planet& planet) {
-    if (planet.oxygenLevel >= 70 ||
-        planet.waterLevel >= 60 ||
-        (planet.gravity >= 0.8 && planet.gravity <= 1.2) ||
-        (planet.temperature >= -20 && planet.temperature <= 40)
-    ) {
+    if (planet.oxygenLevel >= 70 &&
+        planet.waterLevel >= 60 &&
+        planet.gravity >= 0.8 &&
+        planet.gravity <= 1.2 &&
+        planet.temperature >= -20.0 &&
+        planet.temperature <= 40.0) {
         return PlanetClass::Habitable;
     }
 
-    if (planet.oxygenLevel >= 30 ||
-        planet.waterLevel >= 20
-    ) {
+    if (planet.oxygenLevel >= 30 &&
+        planet.waterLevel >= 20) {
         return PlanetClass::Research;
     }
 
@@ -313,25 +313,45 @@ int countAvoid(const std::vector<Planet>& planets) {
     return count;
 }
 
+int calculateWeatherScore(Weather weather) {
+    if (weather == Weather::Sunny) {
+        return 20;
+    }
+
+    if (weather == Weather::Cloudy) {
+        return 10;
+    }
+
+    if (weather == Weather::Storm) {
+        return -30;
+    }
+
+    return -40;
+}
+
 int calculatePlanetScore(const Planet& planet) {
     int score = planet.oxygenLevel + planet.waterLevel;
     score += std::max(0, 100 - (int)std::abs(planet.temperature));
     score += std::max(0, 100 - (int)(std::abs(planet.gravity - 1.0) * 50));
+    score += calculateWeatherScore(planet.weather);
+
     return score;
 }
 
 int findBestPlanetIndex(const std::vector<Planet>& planets) {
-    int bestIndex = -1;
-    int bestScore = 0;
+    if (planets.size() == 0) {
+        return -1;
+    }
 
-    for (int i = 0; i < planets.size(); i++) {
-        if (calculateMissionDecision(planets[i]) == MissionDecision::Visit) {
-            int score = calculatePlanetScore(planets[i]);
+    int bestIndex = 0;
+    int bestScore = calculatePlanetScore(planets[0]);
 
-            if(bestIndex == -1 || score > bestScore) {
-                bestIndex = i;
-                bestScore = score;
-            }
+    for (int i = 1; i < planets.size(); i++) {
+        int score = calculatePlanetScore(planets[i]);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
         }
     }
 
@@ -363,7 +383,17 @@ void printReport(const std::vector<Planet>& planets) {
     std::cout << "Visit: " << countVisit(planets) << std::endl;
     std::cout << "Study: " << countStudy(planets) << std::endl;
     std::cout << "Avoid: " << countAvoid(planets) << std::endl;
-    std::cout << "Best planet: " << findBestPlanetIndex(planets) << std::endl;
+
+    int bestIndex = findBestPlanetIndex(planets);
+
+    if (bestIndex >= 0) {
+        std::cout << "Best planet: "
+                  << planets[bestIndex].name
+                  << " with score "
+                  << calculatePlanetScore(planets[bestIndex])
+                  << std::endl;
+    }
+
 }
 
 int main() {
