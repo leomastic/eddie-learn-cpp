@@ -1,5 +1,4 @@
 #include <iostream>
-#include <limits>
 #include <string>
 #include <vector>
 
@@ -45,7 +44,7 @@ int readIntInRange(std::string prompt, int minValue, int maxValue) {
         if (!(std::cin >> value)) {
             std::cout << "Invalid value. Please enter a valid integer." << std::endl;
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.ignore(10000, '\n');
             continue;
         }
 
@@ -68,7 +67,7 @@ double readDoubleInRange(std::string prompt, double minValue, double maxValue) {
         if (!(std::cin >> value)) {
             std::cout << "Invalid value. Please enter a valid number." << std::endl;
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.ignore(10000, '\n');
             continue;
         }
 
@@ -91,7 +90,7 @@ bool readYesNo(std::string prompt) {
         if (!(std::cin >> value)) {
             std::cout << "Invalid value. Please enter 1 or 0." << std::endl;
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.ignore(10000, '\n');
             continue;
         }
 
@@ -319,7 +318,7 @@ int findBestRobotIndex(const std::vector<Robot>& robots) {
     }
 
     int bestIndex = -1;
-    int bestScore = std::numeric_limits<int>::min();
+    int bestScore = 0;
 
     for (int i = 0; i < static_cast<int>(robots.size()); ++i) {
         int score = calculateRobotScore(robots[i]);
@@ -392,6 +391,7 @@ int main() {
     printRobotReport(robots, mode);
     return 0;
 }
+
 
 
 // siuuuuuuuu
