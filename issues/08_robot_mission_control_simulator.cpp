@@ -392,3 +392,9 @@ int main() {
     printRobotReport(robots, mode);
     return 0;
 }
+
+
+// siuuuuuuuu
+
+
+// Dong nay la 400 dong =)
