@@ -585,11 +585,13 @@ int countVictimDetectedRobots(const std::vector<Robot>& robots) {
 
 int countEmergencyStopRobots(const std::vector<Robot>& robots) {
     int count = 0;
+
     for (const Robot& robot : robots) {
-        if (robot.mode == RobotMode::EmergencyStop) {
+        if (decideRobotAction(robot) == RobotAction::EmergencyStop) {
             ++count;
         }
     }
+
     return count;
 }
 
@@ -623,7 +625,15 @@ void printSummary(const std::vector<Robot>& robots) {
 }
 
 int readRobotIndex(const std::vector<Robot>& robots) {
-    return readIntInRange("Enter robot number: ", 1, static_cast<int>(robots.size())) - 1;
+    if (robots.empty()) {
+        return -1;
+    }
+
+    return readIntInRange(
+        "Enter robot number: ",
+        1,
+        static_cast<int>(robots.size())
+    ) - 1;
 }
 
 void changeRobotMode(std::vector<Robot>& robots) {
@@ -659,7 +669,6 @@ void chargeRobot(std::vector<Robot>& robots) {
 void damageRobot(std::vector<Robot>& robots) {
     int index = readRobotIndex(robots);
     int damage = readIntInRange("Damage amount (1-50): ", 1, 50);
-
     std::cout << "Damaging robot " << robots[index].name << " by " << damage << "." << std::endl;
     robots[index].motorHealth -= damage;
     robots[index].sensorHealth -= damage;
@@ -679,7 +688,6 @@ void damageRobot(std::vector<Robot>& robots) {
 void repairRobot(std::vector<Robot>& robots) {
     int index = readRobotIndex(robots);
     std::cout << "Repairing robot " << robots[index].name << "." << std::endl;
-
     robots[index].motorHealth += 20;
     robots[index].sensorHealth += 20;
 
@@ -763,9 +771,11 @@ bool handleMenuChoice(std::vector<Robot>& robots, MenuChoice choice) {
         case MenuChoice::Exit:
             std::cout << "Exiting mission control." << std::endl;
             return false;
-    }
 
-    return true;
+        default:
+            std::cout << "Unknown menu choice." << std::endl;
+            return true;
+    }
 }
 
 int main() {
