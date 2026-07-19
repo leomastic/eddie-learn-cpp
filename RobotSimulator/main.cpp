@@ -1,6 +1,5 @@
 #include <iostream>
 #include "robot.h"
-#include "state_machine.h"
 #include "utils.h"
 #include "simulation.h"
 

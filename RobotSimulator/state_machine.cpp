@@ -41,6 +41,8 @@ RobotAction decideAction(const Robot& robot) {
         case RobotState::EmergencyStopped:
             return RobotAction::EmergencyStop;
     }
+
+    return RobotAction::Stop;
 }
 
 RobotState calculateNextState(const Robot& robot) {
@@ -95,4 +97,6 @@ RobotState calculateNextState(const Robot& robot) {
         case RobotState::EmergencyStopped:
             return RobotState::EmergencyStopped;
     }
+
+    return RobotState::EmergencyStopped;
 }
