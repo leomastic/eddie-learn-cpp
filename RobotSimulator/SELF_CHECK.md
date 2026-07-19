@@ -6,10 +6,11 @@
 + Instead of that, if we split projects into multiple files, the build system recompiles the changed source file and any files affected by its header dependencies, then the linker rebuilds the executable.
 
 2. What belongs in a header?
-- Declarations;
-- The function without body;
-- Classes;
-- Constant.
+- struct definitions
+- enum definitions
+- function declarations
+- class declarations
+- constants
 
 3. What belongs in a cpp?
 - Real codes (Logic codes, function bodies,...).
@@ -65,3 +66,5 @@
 // dependencies: Thư viện/ mã nguồn.
 
 // executable: là một loại tập tin chứa mã máy tính đã được hệ điều hành biên dịch để có thể chạy trực tiếp thành một chương trình.
+
+// definition: định nghĩa.
