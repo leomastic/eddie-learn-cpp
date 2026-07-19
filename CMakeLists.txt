@@ -19,3 +19,6 @@ foreach(issue_src IN LISTS ISSUE_SOURCES)
     get_filename_component(issue_name ${issue_src} NAME_WE)
     add_executable(${issue_name} ${issue_src})
 endforeach()
+
+# Build RobotSimulator as part of the workspace
+add_subdirectory(RobotSimulator)
