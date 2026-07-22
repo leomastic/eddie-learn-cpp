@@ -21,15 +21,15 @@ void printInventory(const Inventory& inventory) {
 
 void restockInventory(Inventory& inventory) {
     std::cout << "Current oxygen: " << inventory.oxygen << std::endl;
-    int oxygenAdded = readIntInRange("Add oxygen: ", 0, 100000);
+    int oxygenAdded = readIntInRange("Add oxygen: ", 0, 10000);
     inventory.oxygen += oxygenAdded;
 
     std::cout << "Current water: " << inventory.water << std::endl;
-    int waterAdded = readIntInRange("Add water: ", 0, 100000);
+    int waterAdded = readIntInRange("Add water: ", 0, 10000);
     inventory.water += waterAdded;
 
     std::cout << "Current food: " << inventory.food << std::endl;
-    int foodAdded = readIntInRange("Add food: ", 0, 100000);
+    int foodAdded = readIntInRange("Add food: ", 0, 10000);
     inventory.food += foodAdded;
 }
 

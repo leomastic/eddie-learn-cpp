@@ -41,8 +41,6 @@ bool readYesNo(const std::string& prompt) {
 std::string readNonEmptyWord(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::string value;
         std::getline(std::cin, value);
         if (value.empty()) {
@@ -69,8 +67,6 @@ std::string readNonEmptyWord(const std::string& prompt) {
 std::string readNonEmptyLine(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::string value;
         std::getline(std::cin, value);
         if (!value.empty()) {

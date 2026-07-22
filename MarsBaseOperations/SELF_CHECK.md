@@ -37,7 +37,13 @@ It should act as a pure check so it can be reused by multiple functions without 
 They have different responsibilities: one checks whether resources are sufficient, and the other performs the state change.
 
 ## Which header has the most dependencies? Why?
-mission.h has the most dependencies because it needs astronaut, inventory, and vector types to define the mission rules and related functions.
+mission.h has the most dependencies because it needs astronaut, inventory, and vector types to define the mission rules and related functions. The vector types remove separate collection-count parameters from the public APIs.
+
+## Why are enum classes used for status and menu choices?
+Astronaut status, mission status, and menu choices are scoped enum classes. This prevents unrelated integer values from being assigned accidentally and makes state transitions explicit at each call site.
+
+## Why are vectors used instead of fixed arrays?
+Astronauts, missions, and each mission's assigned crew indexes use `std::vector`. Vectors grow safely with `push_back()` and provide their size to every function, avoiding manual count synchronization and fixed-array overflow risks. Crew indexes are validated against the astronaut vector before use.
 
 ## Which module was hardest to design?
 The mission module was hardest because it coordinates assignment, readiness, launch, and completion rules across multiple data types.
@@ -56,6 +62,14 @@ What I learned: Validation must happen before changing program state.
 Cause: The add-astronaut flow did not reject duplicates consistently.
 Fix: The menu flow now checks for an existing astronaut name before adding a new one.
 What I learned: Duplicate protections should be enforced at the boundary where new data is accepted.
+
+### Bug: Line input discarded the next value.
+Cause: The line-reading helpers ignored a complete input line even though numeric helpers had already consumed the newline.
+Fix: Numeric and yes/no helpers now consume their own trailing input, while line helpers read directly with `getline()`.
+What I learned: Input-buffer ownership should be centralized and consistent across helper functions.
+
+### Design correction: Fixed arrays and integer states did not meet the exercise requirements.
+The implementation now uses `std::vector`, `AstronautStatus`, `MissionStatus`, and `MenuChoice`. The menu handlers keep `main()` focused on orchestration and keep it below the requested line limit.
 
 ## Module Responsibility Table
 

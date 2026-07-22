@@ -8,7 +8,7 @@ Astronaut createAstronaut() {
 
     astronaut.name = readNonEmptyWord("Astronaut name: ");
     astronaut.skillLevel = readIntInRange("Skill level (1-10): ", 1, 10);
-    astronaut.status = ASTRONAUT_STATUS_AVAILABLE;
+    astronaut.status = AstronautStatus::Available;
     astronaut.assignedMissionId = -1;
 
     return astronaut;
@@ -26,21 +26,21 @@ void printAstronaut(const Astronaut& astronaut) {
     }
 }
 
-void printAllAstronauts(const Astronaut astronauts[], int astronautCount) {
-    if (astronautCount == 0) {
+void printAllAstronauts(const std::vector<Astronaut>& astronauts) {
+    if (astronauts.empty()) {
         std::cout << "No astronauts registered." << std::endl;
         return;
     }
 
-    for (int i = 0; i < astronautCount; ++i) {
+    for (std::size_t i = 0; i < astronauts.size(); ++i) {
         std::cout << "Astronaut " << (i + 1) << ":" << std::endl;
         printAstronaut(astronauts[i]);
         std::cout << std::endl;
     }
 }
 
-int findAstronautIndexByName(const Astronaut astronauts[], int astronautCount, const std::string& name) {
-    for (int i = 0; i < astronautCount; ++i) {
+int findAstronautIndexByName(const std::vector<Astronaut>& astronauts, const std::string& name) {
+    for (std::size_t i = 0; i < astronauts.size(); ++i) {
         if (name == astronauts[i].name) {
             return i;
         }
@@ -49,11 +49,11 @@ int findAstronautIndexByName(const Astronaut astronauts[], int astronautCount, c
     return -1;
 }
 
-int countAvailableAstronauts(const Astronaut astronauts[], int astronautCount) {
+int countAvailableAstronauts(const std::vector<Astronaut>& astronauts) {
     int count = 0;
 
-    for (int i = 0; i < astronautCount; ++i) {
-        if (astronauts[i].status == ASTRONAUT_STATUS_AVAILABLE) {
+    for (const Astronaut& astronaut : astronauts) {
+        if (astronaut.status == AstronautStatus::Available) {
             ++count;
         }
     }
@@ -61,18 +61,18 @@ int countAvailableAstronauts(const Astronaut astronauts[], int astronautCount) {
     return count;
 }
 
-std::string astronautStatusToString(int status) {
+std::string astronautStatusToString(AstronautStatus status) {
     switch (status) {
-        case ASTRONAUT_STATUS_ASSIGNED:
+        case AstronautStatus::Assigned:
             return "Assigned";
 
-        case ASTRONAUT_STATUS_AVAILABLE:
+        case AstronautStatus::Available:
             return "Available";
 
-        case ASTRONAUT_STATUS_INJURED:
+        case AstronautStatus::Injured:
             return "Injured";
 
-        case ASTRONAUT_STATUS_RESTING:
+        case AstronautStatus::Resting:
             return "Resting";
 
         default:
@@ -81,6 +81,6 @@ std::string astronautStatusToString(int status) {
 }
 
 void resetAstronautStatus(Astronaut& astronaut) {
-    astronaut.status = ASTRONAUT_STATUS_AVAILABLE;
+    astronaut.status = AstronautStatus::Available;
     astronaut.assignedMissionId = -1;
 }

@@ -14,51 +14,49 @@ Mission createMission() {
     mission.requiredOxygen = readIntInRange("Required oxygen: ", 0, 10000);
     mission.requiredWater = readIntInRange("Required water: ", 0, 10000);
     mission.requiredFood = readIntInRange("Required food: ", 0, 10000);
-    mission.status = MISSION_STATUS_PLANNING;
-    mission.assignedCount = 0;
+    mission.status = MissionStatus::Planning;
     return mission;
 }
 
-void printMission(const Mission& mission, const Astronaut astronauts[], int astronautCount) {
+void printMission(const Mission& mission, const std::vector<Astronaut>& astronauts) {
     std::cout << "Mission ID: " << mission.id << std::endl;
     std::cout << "Name: " << mission.name << std::endl;
     std::cout << "Status: " << missionStatusToString(mission.status) << std::endl;
     std::cout << "Required astronauts: " << mission.requiredAstronauts << std::endl;
-    std::cout << "Assigned astronauts: " << mission.assignedCount << std::endl;
+    std::cout << "Assigned astronauts: " << mission.assignedAstronautIndexes.size() << std::endl;
     std::cout << "Minimum total skill: " << mission.minimumTotalSkill << std::endl;
-    std::cout << "Assigned total skill: " << calculateAssignedSkill(mission, astronauts, astronautCount) << std::endl;
+    std::cout << "Assigned total skill: " << calculateAssignedSkill(mission, astronauts) << std::endl;
     std::cout << "Required oxygen: " << mission.requiredOxygen << std::endl;
     std::cout << "Required water: " << mission.requiredWater << std::endl;
     std::cout << "Required food: " << mission.requiredFood << std::endl;
 
     std::cout << "Assigned crew:" << std::endl;
-    if (mission.assignedCount == 0) {
+    if (mission.assignedAstronautIndexes.empty()) {
         std::cout << "- None" << std::endl;
     } else {
-        for (int i = 0; i < mission.assignedCount; ++i) {
-            int index = mission.assignedAstronautIndexes[i];
-            if (index >= 0 && index < astronautCount) {
+        for (int index : mission.assignedAstronautIndexes) {
+            if (index >= 0 && static_cast<std::size_t>(index) < astronauts.size()) {
                 std::cout << "- " << astronauts[index].name << std::endl;
             }
         }
     }
 }
 
-void printAllMissions(const Mission missions[], int missionCount, const Astronaut astronauts[], int astronautCount) {
-    if (missionCount == 0) {
+void printAllMissions(const std::vector<Mission>& missions, const std::vector<Astronaut>& astronauts) {
+    if (missions.empty()) {
         std::cout << "No missions registered." << std::endl;
         return;
     }
 
-    for (int i = 0; i < missionCount; ++i) {
+    for (std::size_t i = 0; i < missions.size(); ++i) {
         std::cout << "Mission " << (i + 1) << ":" << std::endl;
-        printMission(missions[i], astronauts, astronautCount);
+        printMission(missions[i], astronauts);
         std::cout << std::endl;
     }
 }
 
-int findMissionIndexById(const Mission missions[], int missionCount, int missionId) {
-    for (int i = 0; i < missionCount; ++i) {
+int findMissionIndexById(const std::vector<Mission>& missions, int missionId) {
+    for (std::size_t i = 0; i < missions.size(); ++i) {
         if (missions[i].id == missionId) {
             return i;
         }
@@ -66,41 +64,36 @@ int findMissionIndexById(const Mission missions[], int missionCount, int mission
     return -1;
 }
 
-bool assignAstronautToMission(Mission& mission, Astronaut& astronaut, int astronautIndex) {
-    if (astronautIndex < 0) {
+bool assignAstronautToMission(Mission& mission, std::vector<Astronaut>& astronauts, int astronautIndex) {
+    if (astronautIndex < 0 || static_cast<std::size_t>(astronautIndex) >= astronauts.size()) {
         return false;
     }
 
-    if (astronaut.status != ASTRONAUT_STATUS_AVAILABLE) {
+    Astronaut& astronaut = astronauts[astronautIndex];
+    if (astronaut.status != AstronautStatus::Available) {
         return false;
     }
 
-    if (mission.status != MISSION_STATUS_PLANNING && mission.status != MISSION_STATUS_READY) {
+    if (mission.status != MissionStatus::Planning && mission.status != MissionStatus::Ready) {
         return false;
     }
 
-    for (int i = 0; i < mission.assignedCount; ++i) {
-        if (mission.assignedAstronautIndexes[i] == astronautIndex) {
+    for (int assignedIndex : mission.assignedAstronautIndexes) {
+        if (assignedIndex == astronautIndex) {
             return false;
         }
     }
 
-    if (mission.assignedCount >= MAX_ASSIGNED_ASTRONAUTS) {
-        return false;
-    }
-
-    mission.assignedAstronautIndexes[mission.assignedCount] = astronautIndex;
-    ++mission.assignedCount;
-    astronaut.status = ASTRONAUT_STATUS_ASSIGNED;
+    mission.assignedAstronautIndexes.push_back(astronautIndex);
+    astronaut.status = AstronautStatus::Assigned;
     astronaut.assignedMissionId = mission.id;
     return true;
 }
 
-int calculateAssignedSkill(const Mission& mission, const Astronaut astronauts[], int astronautCount) {
+int calculateAssignedSkill(const Mission& mission, const std::vector<Astronaut>& astronauts) {
     int totalSkill = 0;
-    for (int i = 0; i < mission.assignedCount; ++i) {
-        int index = mission.assignedAstronautIndexes[i];
-        if (index >= 0 && index < astronautCount) {
+    for (int index : mission.assignedAstronautIndexes) {
+        if (index >= 0 && static_cast<std::size_t>(index) < astronauts.size()) {
             totalSkill += astronauts[index].skillLevel;
         }
     }
@@ -108,61 +101,50 @@ int calculateAssignedSkill(const Mission& mission, const Astronaut astronauts[],
 }
 
 bool hasEnoughAstronauts(const Mission& mission) {
-    return mission.assignedCount >= mission.requiredAstronauts;
+    return static_cast<int>(mission.assignedAstronautIndexes.size()) >= mission.requiredAstronauts;
 }
 
-bool hasEnoughSkill(const Mission& mission, const Astronaut astronauts[], int astronautCount) {
-    return calculateAssignedSkill(mission, astronauts, astronautCount) >= mission.minimumTotalSkill;
+bool hasEnoughSkill(const Mission& mission, const std::vector<Astronaut>& astronauts) {
+    return calculateAssignedSkill(mission, astronauts) >= mission.minimumTotalSkill;
 }
 
-bool isMissionReady(const Mission& mission, const Astronaut astronauts[], int astronautCount, const Inventory& inventory) {
+bool isMissionReady(const Mission& mission, const std::vector<Astronaut>& astronauts, const Inventory& inventory) {
     return hasEnoughAstronauts(mission)
-        && hasEnoughSkill(mission, astronauts, astronautCount)
+        && hasEnoughSkill(mission, astronauts)
         && hasEnoughResources(inventory, mission.requiredOxygen, mission.requiredWater, mission.requiredFood)
-        && (mission.status == MISSION_STATUS_PLANNING || mission.status == MISSION_STATUS_READY);
+        && (mission.status == MissionStatus::Planning || mission.status == MissionStatus::Ready);
 }
 
-void updateMissionStatus(Mission& mission, const Astronaut astronauts[], int astronautCount, const Inventory& inventory) {
-    if (mission.status != MISSION_STATUS_PLANNING && mission.status != MISSION_STATUS_READY) {
+void updateMissionStatus(Mission& mission, const std::vector<Astronaut>& astronauts, const Inventory& inventory) {
+    if (mission.status != MissionStatus::Planning && mission.status != MissionStatus::Ready) {
         return;
     }
 
-    mission.status = isMissionReady(mission, astronauts, astronautCount, inventory) ? MISSION_STATUS_READY : MISSION_STATUS_PLANNING;
+    mission.status = isMissionReady(mission, astronauts, inventory) ? MissionStatus::Ready : MissionStatus::Planning;
 }
 
-bool launchMission(Mission& mission, Astronaut astronauts[], int astronautCount, Inventory& inventory) {
-    if (mission.status != MISSION_STATUS_READY) {
-        std::cout << "Mission is not ready." << std::endl;
-        return false;
-    }
-
-    if (!isMissionReady(mission, astronauts, astronautCount, inventory)) {
-        std::cout << "Mission is not ready." << std::endl;
-        return false;
-    }
-
-    if (!hasEnoughResources(inventory, mission.requiredOxygen, mission.requiredWater, mission.requiredFood)) {
+bool launchMission(Mission& mission, std::vector<Astronaut>& astronauts, Inventory& inventory) {
+    if (mission.status != MissionStatus::Ready || !isMissionReady(mission, astronauts, inventory)) {
         std::cout << "Mission is not ready." << std::endl;
         return false;
     }
 
     consumeResources(inventory, mission.requiredOxygen, mission.requiredWater, mission.requiredFood);
-    mission.status = MISSION_STATUS_IN_PROGRESS;
+    mission.status = MissionStatus::InProgress;
     std::cout << "Mission " << mission.id << " launched successfully." << std::endl;
     return true;
 }
 
-bool completeMission(Mission& mission, Astronaut astronauts[], int astronautCount) {
-    if (mission.status != MISSION_STATUS_IN_PROGRESS) {
+bool completeMission(Mission& mission, std::vector<Astronaut>& astronauts) {
+    if (mission.status != MissionStatus::InProgress) {
         std::cout << "Mission is not in progress." << std::endl;
         return false;
     }
 
-    mission.status = MISSION_STATUS_COMPLETED;
-    for (int i = 0; i < mission.assignedCount; ++i) {
-        int index = mission.assignedAstronautIndexes[i];
-        if (index >= 0 && index < astronautCount) {
-            astronauts[index].status = ASTRONAUT_STATUS_RESTING;
+    mission.status = MissionStatus::Completed;
+    for (int index : mission.assignedAstronautIndexes) {
+        if (index >= 0 && static_cast<std::size_t>(index) < astronauts.size()) {
+            astronauts[index].status = AstronautStatus::Resting;
             astronauts[index].assignedMissionId = -1;
         }
     }
@@ -171,17 +153,17 @@ bool completeMission(Mission& mission, Astronaut astronauts[], int astronautCoun
     return true;
 }
 
-std::string missionStatusToString(int status) {
+std::string missionStatusToString(MissionStatus status) {
     switch (status) {
-        case MISSION_STATUS_PLANNING:
+        case MissionStatus::Planning:
             return "Planning";
-        case MISSION_STATUS_READY:
+        case MissionStatus::Ready:
             return "Ready";
-        case MISSION_STATUS_IN_PROGRESS:
+        case MissionStatus::InProgress:
             return "In progress";
-        case MISSION_STATUS_COMPLETED:
+        case MissionStatus::Completed:
             return "Completed";
-        case MISSION_STATUS_CANCELLED:
+        case MissionStatus::Cancelled:
             return "Cancelled";
         default:
             return "Unknown";

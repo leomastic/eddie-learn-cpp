@@ -1,15 +1,17 @@
 #pragma once
 #include <string>
+#include <vector>
 
 #include "astronaut.h"
 #include "inventory.h"
 
-const int MISSION_STATUS_PLANNING = 0;
-const int MISSION_STATUS_READY = 1;
-const int MISSION_STATUS_IN_PROGRESS = 2;
-const int MISSION_STATUS_COMPLETED = 3;
-const int MISSION_STATUS_CANCELLED = 4;
-const int MAX_ASSIGNED_ASTRONAUTS = 100;
+enum class MissionStatus {
+    Planning,
+    Ready,
+    InProgress,
+    Completed,
+    Cancelled
+};
 
 struct Mission {
     int id;
@@ -22,34 +24,32 @@ struct Mission {
     int requiredWater;
     int requiredFood;
 
-    int assignedAstronautIndexes[MAX_ASSIGNED_ASTRONAUTS];
-    int assignedCount;
-
-    int status;
+    std::vector<int> assignedAstronautIndexes;
+    MissionStatus status;
 };
 
 Mission createMission();
 
-void printMission(const Mission& mission, const Astronaut astronauts[], int astronautCount);
+void printMission(const Mission& mission, const std::vector<Astronaut>& astronauts);
 
-void printAllMissions(const Mission missions[], int missionCount, const Astronaut astronauts[], int astronautCount);
+void printAllMissions(const std::vector<Mission>& missions, const std::vector<Astronaut>& astronauts);
 
-int findMissionIndexById(const Mission missions[], int missionCount, int missionId);
+int findMissionIndexById(const std::vector<Mission>& missions, int missionId);
 
-bool assignAstronautToMission(Mission& mission, Astronaut& astronaut, int astronautIndex);
+bool assignAstronautToMission(Mission& mission, std::vector<Astronaut>& astronauts, int astronautIndex);
 
-int calculateAssignedSkill(const Mission& mission, const Astronaut astronauts[], int astronautCount);
+int calculateAssignedSkill(const Mission& mission, const std::vector<Astronaut>& astronauts);
 
 bool hasEnoughAstronauts(const Mission& mission);
 
-bool hasEnoughSkill(const Mission& mission, const Astronaut astronauts[], int astronautCount);
+bool hasEnoughSkill(const Mission& mission, const std::vector<Astronaut>& astronauts);
 
-bool isMissionReady(const Mission& mission, const Astronaut astronauts[], int astronautCount, const Inventory& inventory);
+bool isMissionReady(const Mission& mission, const std::vector<Astronaut>& astronauts, const Inventory& inventory);
 
-void updateMissionStatus(Mission& mission, const Astronaut astronauts[], int astronautCount, const Inventory& inventory);
+void updateMissionStatus(Mission& mission, const std::vector<Astronaut>& astronauts, const Inventory& inventory);
 
-bool launchMission(Mission& mission, Astronaut astronauts[], int astronautCount, Inventory& inventory);
+bool launchMission(Mission& mission, std::vector<Astronaut>& astronauts, Inventory& inventory);
 
-bool completeMission(Mission& mission, Astronaut astronauts[], int astronautCount);
+bool completeMission(Mission& mission, std::vector<Astronaut>& astronauts);
 
-std::string missionStatusToString(int status);
+std::string missionStatusToString(MissionStatus status);
