@@ -17,10 +17,10 @@ void updateSensorData(Robot& robot) {
 
 void runRobotRound(Robot& robot) {
     std::cout << "Robot: " << robot.name << std::endl;
-    std::cout << "Current state: " << robotStateToString(robot.state) << std::endl;
+    std::cout << "Current state: " << robot.stateToString() << std::endl;
 
     RobotAction action = decideAction(robot);
-    std::cout << "Action: " << robotActionToString(action) << std::endl;
+    std::cout << "Action: " << robot.actionToString(action) << std::endl;
     std::cout << std::endl;
     std::cout << "Update sensor data..." << std::endl;
 
@@ -28,10 +28,10 @@ void runRobotRound(Robot& robot) {
 
     RobotState nextState = calculateNextState(robot);
     if (nextState == robot.state) {
-        std::cout << "State remains " << robotStateToString(robot.state) << std::endl;
+        std::cout << "State remains " << robot.stateToString() << std::endl;
     } else {
-        std::cout << "State changed from " << robotStateToString(robot.state)
-                  << " to " << robotStateToString(nextState) << std::endl;
+        std::cout << "State changed from " << robot.stateToString()
+                  << " to " << robot.stateToString() << std::endl;
     }
 
     robot.state = nextState;

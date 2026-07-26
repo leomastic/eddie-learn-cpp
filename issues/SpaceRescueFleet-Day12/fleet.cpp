@@ -1,3 +1,4 @@
+#include "robot.h"
 #include "fleet.h"
 #include "state_machine.h"
 #include <iostream>
@@ -11,7 +12,8 @@ void printAllRobots(const std::vector<Robot>& robots) {
 
     for (size_t i = 0; i < robots.size(); ++i) {
         std::cout << "Robot " << (i + 1) << ":" << std::endl;
-        printRobot(robots[i]);
+        Robot robot = robots[i];
+        robot.print();
         std::cout << std::endl;
     }
 }
@@ -21,6 +23,7 @@ int findRobotIndexByName(
     const std::string& name
 ) {
     for (size_t i = 0; i < robots.size(); ++i) {
+        Robot robot = robots[i];
         if (robots[i].name == name) {
             return static_cast<int>(i);
         }
@@ -35,7 +38,7 @@ int findBestRescueRobotIndex(
     int bestIndex = -1;
 
     for (size_t i = 0; i < robots.size(); ++i) {
-        const Robot& robot = robots[i];
+        Robot robot = robots[i];
         bool eligible = robot.batteryLevel >= 15
             && robot.state != RobotState::EmergencyStopped;
 
