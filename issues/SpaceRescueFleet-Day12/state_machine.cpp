@@ -1,28 +1,28 @@
 #include "state_machine.h"
 
-RobotAction decideAction(const Robot& robot) {
-    if(robot.batteryLevel() < 15) {
+RobotAction Robot::decideAction() const{
+    if(this->batteryLevel() < 15) {
         return RobotAction::EmergencyStop;
     }
 
-    RobotState state = robot.state();
+    RobotState state = this->state();
     switch(state) {
         case RobotState::Idle:
             return RobotAction::Stop;
 
         case RobotState::Searching:
-            if(robot.victimDetected()) {
+            if(this->victimDetected()) {
                 return RobotAction::MoveForward;
             }
 
             return RobotAction::ScanArea;
         
         case RobotState::MovingToVictim:
-            if(robot.distanceToObstacle() < 20.0) {
+            if(this->distanceToObstacle() < 20.0) {
                 return RobotAction::TurnRight;
             }
 
-            if(robot.victimReached()) {
+            if(this->victimReached()) {
                 return RobotAction::RescueVictim;
             }
 
@@ -44,50 +44,50 @@ RobotAction decideAction(const Robot& robot) {
     return RobotAction::Stop;
 }
 
-RobotState calculateNextState(const Robot& robot) {
-    if(robot.batteryLevel() < 15) {
+RobotState Robot::calculateNextState() const{
+    if(this->batteryLevel() < 15) {
         return RobotState::EmergencyStopped;
     }
 
-    RobotState state = robot.state();
+    RobotState state = this->state();
     switch(state) {
         case RobotState::Idle:
             return RobotState::Searching;
         
         case RobotState::Searching:
-            if(robot.victimDetected()) {
+            if(this->victimDetected()) {
                 return RobotState::MovingToVictim;
             }
 
             return RobotState::Searching;
 
         case RobotState::MovingToVictim:
-            if(robot.distanceToObstacle() < 20.0) {
+            if(this->distanceToObstacle() < 20.0) {
                 return RobotState::AvoidingObstacle;
             }
 
-            if(robot.victimReached()) {
+            if(this->victimReached()) {
                 return RobotState::RescuingVictim;
             }
 
             return RobotState::MovingToVictim;
 
         case RobotState::AvoidingObstacle:
-            if(robot.distanceToObstacle() >= 20.0) {
+            if(this->distanceToObstacle() >= 20.0) {
                 return RobotState::MovingToVictim;
             }
 
             return RobotState::AvoidingObstacle;
 
         case RobotState::RescuingVictim:
-            if(robot.rescueCompleted()) {
+            if(this->rescueCompleted()) {
                 return RobotState::ReturningToBase;
             }
 
             return RobotState::RescuingVictim;
 
         case RobotState::ReturningToBase:
-            if(robot.arrivedAtBase()) {
+            if(this->arrivedAtBase()) {
                 return RobotState::Idle;
             }
 

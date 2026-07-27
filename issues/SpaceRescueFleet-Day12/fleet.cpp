@@ -76,7 +76,7 @@ int countReadyRobots(const std::vector<Robot>& robots) {
 int countEmergencyRobots(const std::vector<Robot>& robots) {
     int count = 0;
     for (const Robot& robot : robots) {
-        if (decideAction(robot) == RobotAction::EmergencyStop) {
+        if (robot.decideAction() == RobotAction::EmergencyStop) {
             ++count;
         }
     }

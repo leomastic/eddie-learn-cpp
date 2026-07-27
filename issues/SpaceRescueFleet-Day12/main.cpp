@@ -45,7 +45,7 @@ int main() {
         switch (choice) {
             case MenuChoice::AddRobot: {
                 Robot robot = createRobot();
-                if (findRobotIndexByName(robots, robot.name) != -1) {
+                if (findRobotIndexByName(robots, robot.name()) != -1) {
                     std::cout << "A robot with this name already exists." << std::endl;
                 } else {
                     robots.push_back(robot);
@@ -61,7 +61,7 @@ int main() {
                 std::string name = readNonEmptyWord("Enter the robot name: ");
                 int index = findRobotIndexByName(robots, name);
                 if (index >= 0) {
-                    updateSensorData(robots[index]);
+                    robots[index].updateSensorData();
                 } else {
                     std::cout << "Robot not found." << std::endl;
                 }
@@ -81,7 +81,7 @@ int main() {
             case MenuChoice::FindBestRobot: {
                 int bestIndex = findBestRescueRobotIndex(robots);
                 if (bestIndex >= 0) {
-                    std::cout << "Best rescue robot: " << robots[bestIndex].name << std::endl;
+                    std::cout << "Best rescue robot: " << robots[bestIndex].name() << std::endl;
                 } else {
                     std::cout << "Best rescue robot: None" << std::endl;
                 }
@@ -96,8 +96,8 @@ int main() {
                 std::string name = readNonEmptyWord("Enter the robot name: ");
                 int index = findRobotIndexByName(robots, name);
                 if (index >= 0) {
-                    resetRobot(robots[index]);
-                    std::cout << "Robot " << robots[index].name << " has been reset." << std::endl;
+                    robots[index].reset();
+                    std::cout << "Robot " << robots[index].name() << " has been reset." << std::endl;
                 } else {
                     std::cout << "Robot not found." << std::endl;
                 }
