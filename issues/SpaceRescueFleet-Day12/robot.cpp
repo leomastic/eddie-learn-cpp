@@ -11,15 +11,15 @@ Robot::Robot(
     bool rescueCompleted,
     bool arrivedAtBase,
     RobotState state
-) {
-    this->name_ = robotName;
-    this->batteryLevel_ = batteryLevel;
-    this->distanceToObstacle_ = distanceToObstacle;
-    this->victimDetected_ = victimDetected;
-    this->victimReached_ = victimReached;
-    this->rescueCompleted_ = rescueCompleted;
-    this->arrivedAtBase_ = arrivedAtBase;
-    this->state_ = state;
+)
+    : name_(std::move(robotName)),
+      batteryLevel_(batteryLevel),
+      distanceToObstacle_(distanceToObstacle),
+      victimDetected_(victimDetected),
+      victimReached_(victimReached),
+      rescueCompleted_(rescueCompleted),
+      arrivedAtBase_(arrivedAtBase),
+      state_(state) {
 }
 
 const std::string& Robot::name() const {
@@ -125,7 +125,7 @@ std::string Robot::stateToString(RobotState state) {
     }
 }
 
-std::string actionToString(RobotAction action) {
+std::string Robot::actionToString(RobotAction action) {
     switch (action) {
         case RobotAction::EmergencyStop:
             return "Emergency Stop";

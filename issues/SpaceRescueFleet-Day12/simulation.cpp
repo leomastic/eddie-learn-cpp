@@ -49,7 +49,7 @@ void runFleetRound(std::vector<Robot>& robots) {
 
     for (size_t i = 0; i < robots.size(); ++i) {
         std::cout << "Robot " << (i + 1) << " of " << robots.size() << std::endl;
-        runRobotRound(robots[i]);
+        robots[i].runRound();
         if (i + 1 < robots.size()) {
             std::cout << std::endl;
         }
