@@ -12,8 +12,7 @@ void printAllRobots(const std::vector<Robot>& robots) {
 
     for (size_t i = 0; i < robots.size(); ++i) {
         std::cout << "Robot " << (i + 1) << ":" << std::endl;
-        Robot robot = robots[i];
-        robot.print();
+        robots[i].print();
         std::cout << std::endl;
     }
 }
@@ -24,7 +23,7 @@ int findRobotIndexByName(
 ) {
     for (size_t i = 0; i < robots.size(); ++i) {
         Robot robot = robots[i];
-        if (robots[i].name == name) {
+        if (robots[i].name() == name) {
             return static_cast<int>(i);
         }
     }
@@ -39,8 +38,8 @@ int findBestRescueRobotIndex(
 
     for (size_t i = 0; i < robots.size(); ++i) {
         Robot robot = robots[i];
-        bool eligible = robot.batteryLevel >= 15
-            && robot.state != RobotState::EmergencyStopped;
+        bool eligible = robot.batteryLevel() >= 15
+            && robot.state() != RobotState::EmergencyStopped;
 
         if (!eligible) {
             continue;
@@ -52,9 +51,9 @@ int findBestRescueRobotIndex(
         }
 
         const Robot& bestRobot = robots[bestIndex];
-        if (robot.batteryLevel > bestRobot.batteryLevel
-            || (robot.batteryLevel == bestRobot.batteryLevel
-                && robot.distanceToObstacle > bestRobot.distanceToObstacle)) {
+        if (robot.batteryLevel() > bestRobot.batteryLevel()
+            || (robot.batteryLevel() == bestRobot.batteryLevel()
+                && robot.distanceToObstacle() > bestRobot.distanceToObstacle())) {
             bestIndex = static_cast<int>(i);
         }
     }
@@ -65,8 +64,8 @@ int findBestRescueRobotIndex(
 int countReadyRobots(const std::vector<Robot>& robots) {
     int count = 0;
     for (const Robot& robot : robots) {
-        if (robot.batteryLevel >= 30
-            && robot.state != RobotState::EmergencyStopped) {
+        if (robot.batteryLevel() >= 30
+            && robot.state() != RobotState::EmergencyStopped) {
             ++count;
         }
     }
@@ -94,7 +93,7 @@ double calculateAverageBattery(
 
     double sum = 0.0;
     for (const Robot& robot : robots) {
-        sum += robot.batteryLevel;
+        sum += robot.batteryLevel();
     }
 
     return sum / robots.size();
@@ -123,7 +122,7 @@ void printFleetSummary(
               << averageBattery << std::endl;
 
     if (bestIndex >= 0) {
-        std::cout << "Best rescue robot: " << robots[bestIndex].name << std::endl;
+        std::cout << "Best rescue robot: " << robots[bestIndex].name() << std::endl;
     } else {
         std::cout << "Best rescue robot: None" << std::endl;
     }

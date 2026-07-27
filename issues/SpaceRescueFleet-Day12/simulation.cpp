@@ -3,38 +3,42 @@
 #include "utils.h"
 #include <iostream>
 
-void updateSensorData(Robot& robot) {
+void Robot::updateSensorData() {
     std::cout << std::endl;
-    std::cout << "Updating sensor information for " << robot.name << "." << std::endl;
-    robot.batteryLevel = readIntInRange("Battery level (0--100): ", 0, 100);
-    robot.distanceToObstacle = readDoubleInRange("Distance to obstacle (0.0--1000.0): ", 0.0, 1000.0);
-    robot.victimDetected = readYesNo("Victim detected? ");
-    robot.victimReached = readYesNo("Victim reached? ");
-    robot.rescueCompleted = readYesNo("Rescue completed? ");
-    robot.arrivedAtBase = readYesNo("Arrived at base? ");
+    std::cout << "Updating sensor information for " << this->name_ << "." << std::endl;
+    this->batteryLevel_ = readIntInRange("Battery level (0--100): ", 0, 100);
+    this->distanceToObstacle_ = readDoubleInRange("Distance to obstacle (0.0--1000.0): ", 0.0, 1000.0);
+    this->victimDetected_ = readYesNo("Victim detected? ");
+    this->victimReached_ = readYesNo("Victim reached? ");
+    this->rescueCompleted_ = readYesNo("Rescue completed? ");
+    this->arrivedAtBase_ = readYesNo("Arrived at base? ");
     std::cout << std::endl;
 }
 
-void runRobotRound(Robot& robot) {
-    std::cout << "Robot: " << robot.name << std::endl;
-    std::cout << "Current state: " << robot.stateToString() << std::endl;
+void Robot::runRound() {
+    std::cout << "Robot: " << this->name_ << std::endl;
+    std::cout << "Current state: " << this->stateToString(this->state_) << std::endl; 
 
-    RobotAction action = decideAction(robot);
-    std::cout << "Action: " << robot.actionToString(action) << std::endl;
+    RobotAction action = this->decideAction();
+    std::cout << "Action: " << this->actionToString(action) << std::endl;
     std::cout << std::endl;
     std::cout << "Update sensor data..." << std::endl;
 
-    updateSensorData(robot);
+    this->updateSensorData();
 
-    RobotState nextState = calculateNextState(robot);
-    if (nextState == robot.state) {
-        std::cout << "State remains " << robot.stateToString() << std::endl;
+    RobotState nextState = this->calculateNextState();
+    if (nextState == this->state_) {
+        std::cout << "State remains " << this->stateToString(this->state_) << std::endl;
     } else {
-        std::cout << "State changed from " << robot.stateToString()
-                  << " to " << robot.stateToString() << std::endl;
+        std::cout
+        << "State changed from "
+        << Robot::stateToString(this->state())
+        << " to "
+        << Robot::stateToString(nextState)
+        << '\n';
     }
 
-    robot.state = nextState;
+    this->state_ = nextState;
 }
 
 void runFleetRound(std::vector<Robot>& robots) {

@@ -23,42 +23,48 @@ enum class RobotAction {
 
 class Robot {
 public:
-    std::string name;
+    Robot(std::string robotName,
+          int batteryLevel,
+          double distanceToObstacle,
+          bool victimDetected,
+          bool victimReached,
+          bool rescueCompleted,
+          bool arrivedAtBase,
+          RobotState state);
 
-    int batteryLevel;
-    double distanceToObstacle;
+    const std::string& name() const;
+    int batteryLevel() const;
+    double distanceToObstacle() const;
+    RobotState state() const;
 
-    bool victimDetected;
-    bool victimReached;
-    bool rescueCompleted;
-    bool arrivedAtBase;
+    bool victimDetected() const;
+    bool victimReached() const;
+    bool rescueCompleted() const;
+    bool arrivedAtBase() const;
 
-    RobotState state;
-
-    Robot();
-
-    Robot(
-        std::string robotName,
-        int batteryLevel,
-        double distanceToObstacle,
-        bool victimDetected,
-        bool victimReached,
-        bool rescueCompleted,
-        bool arrivedAtBase,
-        RobotState state
-    );
-
-    Robot create();
-
-    void print();
-
+    void print() const;
     void reset();
 
-    std::string stateToString();
+    RobotAction decideAction() const;
+    void updateSensorData();
+    void runRound();
 
-    std::string actionToString(RobotAction);
+    static std::string stateToString(RobotState state);
+    static std::string actionToString(RobotAction action);
+
+private:
+    RobotState calculateNextState() const;
+
+    std::string name_;
+    int batteryLevel_;
+    double distanceToObstacle_;
+
+    bool victimDetected_;
+    bool victimReached_;
+    bool rescueCompleted_;
+    bool arrivedAtBase_;
+
+    RobotState state_;
 };
 
 Robot createRobot();
-
-void resetRobot(Robot& robot);

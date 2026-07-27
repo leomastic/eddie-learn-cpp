@@ -2,18 +2,6 @@
 #include "utils.h"
 #include <iostream>
 
-Robot::Robot() {
-    // Create an empty robot object
-}
-
-Robot createRobot() {
-    return Robot().create();
-}
-
-void resetRobot(Robot& robot) {
-    robot.reset();
-}
-
 Robot::Robot(
     std::string robotName,
     int batteryLevel,
@@ -24,62 +12,93 @@ Robot::Robot(
     bool arrivedAtBase,
     RobotState state
 ) {
-    this->name = robotName;
-    this->batteryLevel = batteryLevel;
-    this->distanceToObstacle = distanceToObstacle;
-    this->victimDetected = victimDetected;
-    this->victimReached = victimReached;
-    this->rescueCompleted = rescueCompleted;
-    this->arrivedAtBase = arrivedAtBase;
-    this->state = state;
+    this->name_ = robotName;
+    this->batteryLevel_ = batteryLevel;
+    this->distanceToObstacle_ = distanceToObstacle;
+    this->victimDetected_ = victimDetected;
+    this->victimReached_ = victimReached;
+    this->rescueCompleted_ = rescueCompleted;
+    this->arrivedAtBase_ = arrivedAtBase;
+    this->state_ = state;
 }
 
-Robot Robot::create() {
+const std::string& Robot::name() const {
+    return this->name_;
+}
+
+int Robot::batteryLevel() const {
+    return this->batteryLevel_;
+}
+
+double Robot::distanceToObstacle() const {
+    return this->distanceToObstacle_;
+}
+
+RobotState Robot::state() const {
+    return this->state_;
+}
+
+bool Robot::victimDetected() const {
+    return this->victimDetected_;
+}
+
+bool Robot::victimReached() const {
+    return this->victimReached_;
+}
+
+bool Robot::rescueCompleted() const {
+    return this->rescueCompleted_;
+}
+
+bool Robot::arrivedAtBase() const {
+    return this->arrivedAtBase_;
+}
+
+Robot createRobot() {
     std::cout << std::endl;
-    std::cout << "Please enter the robot name (no space): ";
-    std::cin >> name;
+    std::string name = readNonEmptyWord("Please enter the robot name (no space): ");
 
-    batteryLevel = readIntInRange("Please enter the robot battery level (0 --> 100): ", 0, 100);
-    distanceToObstacle = readDoubleInRange("Please enter the distance to obstacle (0.0 --> 1000.0): ", 0, 1000);
+    int batteryLevel = readIntInRange("Please enter the robot battery level (0 --> 100): ", 0, 100);
+    double distanceToObstacle = readDoubleInRange("Please enter the distance to obstacle (0.0 --> 1000.0): ", 0, 1000);
 
-    victimDetected = readYesNo("Victim detected? ");
-    victimReached = readYesNo("Victim reached? ");
-    rescueCompleted = readYesNo("Rescue completed? ");
-    arrivedAtBase = readYesNo("Arrived at base? ");
+    bool victimDetected = readYesNo("Victim detected? ");
+    bool victimReached = readYesNo("Victim reached? ");
+    bool rescueCompleted = readYesNo("Rescue completed? ");
+    bool arrivedAtBase = readYesNo("Arrived at base? ");
 
-    state = RobotState::Idle;
+    RobotState state = RobotState::Idle;
     std::cout << std::endl;
 
     return Robot(name, batteryLevel, distanceToObstacle, victimDetected,
                  victimReached, rescueCompleted, arrivedAtBase, state);
 }
 
-void Robot::print() {
+void Robot::print() const {
     std::cout << "Robot status:" << std::endl;
-    std::cout << "Name: " << this->name << std::endl;
-    std::cout << "Battery level: " << this->batteryLevel << std::endl;
-    std::cout << "Distance to obstacle: " << this->distanceToObstacle << std::endl;
-    std::cout << "Victim detected: " << (this->victimDetected ? "Yes" : "No") << std::endl;
-    std::cout << "Victim reached: " << (this->victimReached ? "Yes" : "No") << std::endl;
-    std::cout << "Rescue completed: " << (this->rescueCompleted ? "Yes" : "No") << std::endl;
-    std::cout << "Arrived at base: " << (this->arrivedAtBase ? "Yes" : "No") << std::endl;
-    std::cout << "Current state: " << this->stateToString() << std::endl;
+    std::cout << "Name: " << this->name_ << std::endl;
+    std::cout << "Battery level: " << this->batteryLevel_ << std::endl;
+    std::cout << "Distance to obstacle: " << this->distanceToObstacle_ << std::endl;
+    std::cout << "Victim detected: " << (this->victimDetected_ ? "Yes" : "No") << std::endl;
+    std::cout << "Victim reached: " << (this->victimReached_ ? "Yes" : "No") << std::endl;
+    std::cout << "Rescue completed: " << (this->rescueCompleted_ ? "Yes" : "No") << std::endl;
+    std::cout << "Arrived at base: " << (this->arrivedAtBase_ ? "Yes" : "No") << std::endl;
+    std::cout << "Current state: " << this->stateToString(this->state_) << std::endl;
 }
 
 void Robot::reset() {
-    this->batteryLevel = 100;
-    this->distanceToObstacle = 1000.0;
+    this->batteryLevel_ = 100;
+    this->distanceToObstacle_ = 1000.0;
 
-    this->victimDetected = false;
-    this->victimReached = false;
-    this->rescueCompleted = false;
-    this->arrivedAtBase = true;
+    this->victimDetected_ = false;
+    this->victimReached_ = false;
+    this->rescueCompleted_ = false;
+    this->arrivedAtBase_ = true;
 
-    this->state = RobotState::Idle;
+    this->state_ = RobotState::Idle;
 }
 
-std::string Robot::stateToString() {
-    switch (this->state) {
+std::string Robot::stateToString(RobotState state) {
+    switch (state) {
         case RobotState::AvoidingObstacle:
             return "Avoiding Obstacle";
 
@@ -106,7 +125,7 @@ std::string Robot::stateToString() {
     }
 }
 
-std::string Robot::actionToString(RobotAction action) {
+std::string actionToString(RobotAction action) {
     switch (action) {
         case RobotAction::EmergencyStop:
             return "Emergency Stop";
