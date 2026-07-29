@@ -37,7 +37,7 @@ int findBestRescueRobotIndex(
     int bestIndex = -1;
 
     for (size_t i = 0; i < robots.size(); ++i) {
-        Robot robot = robots[i];
+        const Robot& robot = robots[i];
         bool eligible = robot.batteryLevel() >= 15
             && robot.state() != RobotState::EmergencyStopped;
 

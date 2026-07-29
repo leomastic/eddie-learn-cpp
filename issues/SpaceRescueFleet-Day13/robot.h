@@ -34,9 +34,9 @@ public:
           RobotState state);
 
     const std::string& name() const;
-    Battery batteryLevel() const;
+    int batteryLevel() const;
+    BatteryStatus batteryStatus() const;
     bool hasLowBattery() const;
-    void consumeEnergyForAction(RobotAction action);
     double distanceToObstacle() const;
     RobotState state() const;
 
@@ -56,6 +56,7 @@ public:
     static std::string actionToString(RobotAction action);
 
 private:
+    void consumeEnergyForAction(RobotAction action);
     RobotState calculateNextState() const;
 
     std::string name_;

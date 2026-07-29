@@ -2,8 +2,7 @@
 #include <algorithm>
 
 Battery::Battery(int level)
-    : level_(std::clamp(level, 0, 100)),
-      status_(BatteryStatus::Full) {
+    : level_(std::clamp(level, 0, 100)) {
 }
 
 int Battery::level() const {
@@ -19,11 +18,7 @@ bool Battery::isEmpty() const {
 }
 
 bool Battery::isLow() const {
-    if(0 < this->level_ < 15) {
-        return true;
-    } else {
-        return false;
-    }
+    return level_ > 0 && level_ < 15;
 }
 
 bool Battery::isFull() const {
@@ -35,27 +30,35 @@ bool Battery::isFull() const {
 }
 
 BatteryStatus Battery::status() const {
-    return this->status_;
+    if (isEmpty()) {
+        return BatteryStatus::Empty;
+    }
+
+    if (isLow()) {
+        return BatteryStatus::Low;
+    }
+
+    if (isFull()) {
+        return BatteryStatus::Full;
+    }
+
+    return BatteryStatus::Normal;
 }
 
 void Battery::consume(int amount) {
-    if(amount <= 0) {
-        this->level_ = this->level_;
-    } else if(amount > this->level_) {
-        this->level_ = 0;
-    } else {
-        this->level_ -= amount;
+    if (amount <= 0) {
+        return;
     }
+
+    level_ = std::max(0, level_ - amount);
 }
 
 void Battery::charge(int amount) {
-    if(amount <= 0) {
-        this->level_ = this->level_;
-    } else if(amount > (100 - this->level_)) {
-        this->level_ = 100;
-    } else {
-        this->level_ += amount;
+    if (amount <= 0) {
+        return;
     }
+
+    level_ = std::min(100, level_ + amount);
 }
 
 void Battery::reset() {

@@ -1,5 +1,6 @@
 #include "robot.h"
 #include "utils.h"
+#include <utility>
 #include <iostream>
 
 Robot::Robot(
@@ -26,8 +27,12 @@ const std::string& Robot::name() const {
     return this->name_;
 }
 
-Battery Robot::batteryLevel() const {
-    return this->battery_;
+int Robot::batteryLevel() const {
+    return battery_.level();
+}
+
+BatteryStatus Robot::batteryStatus() const {
+    return battery_.status();
 }
 
 bool Robot::hasLowBattery() const {
@@ -110,13 +115,6 @@ Robot createRobot() {
 void Robot::print() const {
     std::cout << "Robot status:" << std::endl;
     std::cout << "Name: " << this->name_ << std::endl;
-    std::cout << "Battery level: " << this->battery_.level() << std::endl;
-    std::cout << "Distance to obstacle: " << this->distanceToObstacle_ << std::endl;
-    std::cout << "Victim detected: " << (this->victimDetected_ ? "Yes" : "No") << std::endl;
-    std::cout << "Victim reached: " << (this->victimReached_ ? "Yes" : "No") << std::endl;
-    std::cout << "Rescue completed: " << (this->rescueCompleted_ ? "Yes" : "No") << std::endl;
-    std::cout << "Arrived at base: " << (this->arrivedAtBase_ ? "Yes" : "No") << std::endl;
-    std::cout << "Current state: " << this->stateToString(this->state_) << std::endl;
     std::cout
         << "Battery level: "
         << battery_.level()
@@ -126,6 +124,12 @@ void Robot::print() const {
         << "Battery status: "
         << Battery::statusToString(battery_.status())
         << std::endl;
+    std::cout << "Distance to obstacle: " << this->distanceToObstacle_ << std::endl;
+    std::cout << "Victim detected: " << (this->victimDetected_ ? "Yes" : "No") << std::endl;
+    std::cout << "Victim reached: " << (this->victimReached_ ? "Yes" : "No") << std::endl;
+    std::cout << "Rescue completed: " << (this->rescueCompleted_ ? "Yes" : "No") << std::endl;
+    std::cout << "Arrived at base: " << (this->arrivedAtBase_ ? "Yes" : "No") << std::endl;
+    std::cout << "Current state: " << this->stateToString(this->state_) << std::endl;
 }
 
 void Robot::reset() {

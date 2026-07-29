@@ -28,6 +28,4 @@ public:
 
 private:
     int level_;
-
-    BatteryStatus status_;
 };

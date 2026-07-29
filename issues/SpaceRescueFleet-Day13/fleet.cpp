@@ -22,7 +22,6 @@ int findRobotIndexByName(
     const std::string& name
 ) {
     for (size_t i = 0; i < robots.size(); ++i) {
-        Robot robot = robots[i];
         if (robots[i].name() == name) {
             return static_cast<int>(i);
         }
@@ -37,8 +36,8 @@ int findBestRescueRobotIndex(
     int bestIndex = -1;
 
     for (size_t i = 0; i < robots.size(); ++i) {
-        Robot robot = robots[i];
-        bool eligible = robot.batteryLevel().level() >= 15
+        const Robot& robot = robots[i];
+        bool eligible = !robot.hasLowBattery()
             && robot.state() != RobotState::EmergencyStopped;
 
         if (!eligible) {
@@ -51,8 +50,8 @@ int findBestRescueRobotIndex(
         }
 
         const Robot& bestRobot = robots[bestIndex];
-        if (robot.batteryLevel().level() > bestRobot.batteryLevel().level()
-            || (robot.batteryLevel().level() == bestRobot.batteryLevel().level()
+        if (robot.batteryLevel() > bestRobot.batteryLevel()
+            || (robot.batteryLevel() == bestRobot.batteryLevel()
                 && robot.distanceToObstacle() > bestRobot.distanceToObstacle())) {
             bestIndex = static_cast<int>(i);
         }
@@ -64,7 +63,7 @@ int findBestRescueRobotIndex(
 int countReadyRobots(const std::vector<Robot>& robots) {
     int count = 0;
     for (const Robot& robot : robots) {
-        if (robot.batteryLevel().level() >= 30
+        if (robot.batteryLevel() >= 30
             && robot.state() != RobotState::EmergencyStopped) {
             ++count;
         }
@@ -93,7 +92,7 @@ double calculateAverageBattery(
 
     double sum = 0.0;
     for (const Robot& robot : robots) {
-        sum += robot.batteryLevel().level();
+        sum += robot.batteryLevel();
     }
 
     return sum / robots.size();

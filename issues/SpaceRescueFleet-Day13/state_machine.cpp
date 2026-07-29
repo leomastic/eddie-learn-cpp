@@ -45,7 +45,7 @@ RobotAction Robot::decideAction() const{
 }
 
 RobotState Robot::calculateNextState() const{
-    if(this->batteryLevel().level() < 15) {
+    if (hasLowBattery()) {
         return RobotState::EmergencyStopped;
     }
 

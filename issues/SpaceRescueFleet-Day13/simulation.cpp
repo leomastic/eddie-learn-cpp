@@ -26,8 +26,16 @@ void Robot::runRound() {
     RobotAction action = this->decideAction();
     consumeEnergyForAction(action);
 
-    std::cout << "Battery after action: " << batteryLevel().level() ;
-    std::cout << "Action: " << this->actionToString(action) << std::endl;
+    std::cout
+        << "Action: "
+        << actionToString(action)
+        << std::endl;
+
+    std::cout
+        << "Battery after action: "
+        << batteryLevel()
+        << std::endl;
+
     std::cout << std::endl;
     std::cout << "Update sensor data..." << std::endl;
 
