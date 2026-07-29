@@ -53,12 +53,11 @@ that initializer makes that when the battery_ is created directly using the batt
 
 7. When is the Battery object created relative to the body of Robot::Robot()?
 
-after Robot::Robot(...) :
-before {...}
+battery_ is constructed before the constructor body begins. All data members are initialized before the statements inside {} execute.
 
 8. Why should initializer-list order match member declaration order?
 
-You should list members in the initializer list in the same order as they are declared in the class to avoid unnecessary errors.
+Members are initialized in declaration order, not initializer-list order. Matching both orders prevents warnings and avoids dependency bugs when one member is initialized using another.
 
 9. Why is Battery::level() declared const?
 
@@ -87,7 +86,7 @@ class Battery.
 
 13. Why should calculateNextState() not contain the literal number 15 anymore?
 
-because of encapsulation
+Because the threshold is a Battery rule. If the low-battery threshold changes, only Battery::isLow() should need modification. Robot should ask hasLowBattery() instead of duplicating the number 15.
 
 
 14. What advantage does BatteryStatus provide compared with returning only an integer?
@@ -96,4 +95,4 @@ It offers the benefit of distinguishing the battery's condition, rather than sim
 
 15. What was the hardest part of this refactor?
 
-idk
+The hardest part was replacing the integer battery level throughout all existing files without breaking the public interface.

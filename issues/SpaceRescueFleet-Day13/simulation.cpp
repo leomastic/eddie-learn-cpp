@@ -7,10 +7,6 @@ void Robot::updateSensorData() {
     std::cout << std::endl;
     std::cout << "Updating sensor information for " << this->name_ << "." << std::endl;
 
-    int newBatteryLevel = readIntInRange("Battery level (0--100): ", 0, 100);
-    battery_ = Battery(newBatteryLevel);
-
-
     this->distanceToObstacle_ = readDoubleInRange("Distance to obstacle (0.0--1000.0): ", 0.0, 1000.0);
     this->victimDetected_ = readYesNo("Victim detected? ");
     this->victimReached_ = readYesNo("Victim reached? ");

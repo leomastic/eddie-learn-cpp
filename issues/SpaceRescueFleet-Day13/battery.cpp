@@ -66,17 +66,19 @@ void Battery::reset() {
 }
 
 std::string Battery::statusToString(BatteryStatus status) {
-    switch(status) {
+    switch (status) {
         case BatteryStatus::Empty:
             return "Empty";
-
-        case BatteryStatus::Full:
-            return "Full";
 
         case BatteryStatus::Low:
             return "Low";
 
-        default:
+        case BatteryStatus::Normal:
             return "Normal";
+
+        case BatteryStatus::Full:
+            return "Full";
     }
+
+    return "Unknown";
 }
