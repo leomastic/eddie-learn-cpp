@@ -126,12 +126,29 @@ bool Robot::completeMaintenance() {
 
     this->errorCode_ = 0;
     this->operatingHours_ = 0;
-    this->status_ = RobotStatus::Ready;
+
+    if (this->batteryLevel() == 0) {
+        this->status_ = RobotStatus::OutOfService;
+    } else if (this->hasError() || this->operatingHours_ >= 1000) {
+        this->status_ = RobotStatus::NeedsMaintenance;
+    } else {
+        this->status_ = RobotStatus::Ready;
+    }
+
+    return true;
+}
+
+bool Robot::cancelMaintenance() {
+    if (this->status_ != RobotStatus::UnderMaintenance) {
+        return false;
+    }
+
+    this->status_ = RobotStatus::NeedsMaintenance;
     return true;
 }
 
 bool Robot::startCharging() {
-    if (this->status_ == RobotStatus::UnderMaintenance || this->status_ == RobotStatus::OutOfService || this->status_ == RobotStatus::NeedsMaintenance || this->batteryLevel() == 0) {
+    if (this->status_ == RobotStatus::UnderMaintenance || this->status_ == RobotStatus::Charging || this->battery_.isFull()) {
         return false;
     }
 
@@ -145,7 +162,12 @@ bool Robot::chargeBattery(int amount) {
     }
 
     this->battery_.charge(amount);
-    this->updateStatus();
+
+    if (this->battery_.isFull()) {
+        this->status_ = RobotStatus::Ready;
+        this->updateStatus();
+    }
+
     return true;
 }
 
@@ -154,14 +176,8 @@ bool Robot::stopCharging() {
         return false;
     }
 
-    if (this->batteryLevel() == 0) {
-        this->status_ = RobotStatus::OutOfService;
-    } else if (this->hasError() || this->operatingHours_ >= 1000) {
-        this->status_ = RobotStatus::NeedsMaintenance;
-    } else {
-        this->status_ = RobotStatus::Ready;
-    }
-
+    this->status_ = RobotStatus::Ready;
+    this->updateStatus();
     return true;
 }
 

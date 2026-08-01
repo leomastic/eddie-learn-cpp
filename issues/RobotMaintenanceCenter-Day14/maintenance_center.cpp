@@ -134,12 +134,12 @@ bool MaintenanceCenter::completeMaintenance(
         return false;
     }
 
-    Technician& technician = technicians_[technicianIndex];
-    if (!technician.completeAssignment()) {
+    if (!robot.completeMaintenance()) {
         return false;
     }
 
-    return robot.completeMaintenance();
+    Technician& technician = technicians_[technicianIndex];
+    return technician.completeAssignment();
 }
 
 bool MaintenanceCenter::cancelMaintenance(const std::string& robotId) {
@@ -148,9 +148,19 @@ bool MaintenanceCenter::cancelMaintenance(const std::string& robotId) {
         return false;
     }
 
+    Robot& robot = robots_[robotIndex];
+    if (!robot.isUnderMaintenance()) {
+        return false;
+    }
+
     for (std::size_t i = 0; i < technicians_.size(); ++i) {
         if (technicians_[i].assignedRobotId() == robotId) {
-            technicians_[i].cancelAssignment();
+            if (!robot.cancelMaintenance()) {
+                return false;
+            }
+            if (!technicians_[i].cancelAssignment()) {
+                return false;
+            }
             return true;
         }
     }
@@ -216,7 +226,7 @@ bool MaintenanceCenter::printTechnician(const std::string& technicianId) const {
 
 void MaintenanceCenter::printAllRobots() const {
     if (robots_.empty()) {
-        std::cout << "No robots in the fleet." << std::endl;
+        std::cout << "No robots in the maintenance center." << std::endl;
         return;
     }
 
@@ -229,7 +239,7 @@ void MaintenanceCenter::printAllRobots() const {
 
 void MaintenanceCenter::printAllTechnicians() const {
     if (technicians_.empty()) {
-        std::cout << "No technicians in the fleet." << std::endl;
+        std::cout << "No technicians in the maintenance center." << std::endl;
         return;
     }
 
@@ -374,7 +384,7 @@ void MaintenanceCenter::printSummary() const {
         completedMaintenanceJobs = technicians_[expIndex].completedMaintenanceCount();
     }
 
-    std::cout << "===== Fleet Summary =====" << std::endl;
+    std::cout << "===== Maintenance Center Summary =====" << std::endl;
     std::cout << std::endl;
     std::cout << "Total robots: " << total << std::endl;
     std::cout << "Ready robots: " << ready << std::endl;

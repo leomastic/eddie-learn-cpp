@@ -50,6 +50,51 @@ int main() {
     }
 
     {
+        Robot robot("R001", "Atlas", 0, 100);
+        expect(robot.status() == RobotStatus::OutOfService, "Empty robot begins out of service");
+        expect(robot.startCharging(), "Empty robot can start charging");
+        expect(robot.status() == RobotStatus::Charging, "Empty robot enters charging");
+    }
+
+    {
+        Robot robot("R001", "Atlas", 100, 100);
+        expect(!robot.startCharging(), "Full robot cannot start charging");
+    }
+
+    {
+        Robot robot("R001", "Atlas", 90, 100);
+        expect(robot.startCharging(), "Charging can start for a non-full robot");
+        expect(robot.chargeBattery(20), "Charging can reach full battery");
+        expect(robot.batteryLevel() == 100, "Battery reaches full level");
+        expect(robot.status() == RobotStatus::Ready, "Fully charged robot returns to ready");
+    }
+
+    {
+        MaintenanceCenter center({Robot("R001", "Atlas", 80, 950)}, {Technician("T001", "Eddie")});
+        expect(center.reportRobotError("R001", 301), "Set robot to need maintenance");
+        expect(center.assignMaintenance("R001", "T001"), "Assign maintenance before completion");
+        expect(center.completeMaintenance("R001"), "Complete maintenance successfully");
+        expect(center.availableTechnicianCount() == 1, "Technician becomes available after completion");
+    }
+
+    {
+        MaintenanceCenter center({Robot("R001", "Atlas", 80, 1000)}, {Technician("T001", "Eddie")});
+        expect(center.reportRobotError("R001", 301), "Set robot to need maintenance for cancellation");
+        expect(center.assignMaintenance("R001", "T001"), "Assign maintenance before cancellation");
+        expect(center.cancelMaintenance("R001"), "Cancel maintenance successfully");
+        expect(center.completeMaintenance("R001") == false, "Maintenance cannot be completed after cancellation");
+        expect(center.availableTechnicianCount() == 1, "Technician becomes available after cancellation");
+    }
+
+    {
+        Robot robot("R001", "Atlas", 40, 1200);
+        expect(robot.reportError(301), "Set robot error before completion");
+        expect(robot.startMaintenance(), "Enter maintenance");
+        expect(robot.completeMaintenance(), "Complete maintenance for non-empty battery robot");
+        expect(robot.status() == RobotStatus::Ready, "Completed maintenance returns the robot to ready state");
+    }
+
+    {
         MaintenanceCenter center({Robot("R001", "Atlas", 80, 950), Robot("R002", "Beta", 80, 950)}, {Technician("T001", "Eddie")});
         expect(center.reportRobotError("R001", 301), "Set first robot to need maintenance");
         expect(center.assignMaintenance("R001", "T001"), "Assign first robot");
