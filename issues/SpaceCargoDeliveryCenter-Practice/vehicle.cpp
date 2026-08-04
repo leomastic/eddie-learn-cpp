@@ -147,13 +147,24 @@ bool Vehicle::completeDelivery() {
 }
 
 bool Vehicle::startRefueling() {
-    if(!isInTransit() && !isRefueling() && !fuelTank_.isFull()
-        && status_ == VehicleStatus::OutOfService) {
-        status_ = VehicleStatus::Refueling;
-        return true;
+    if (isInTransit()) {
+        return false;
     }
 
-    return false;
+    if (isRefueling()) {
+        return false;
+    }
+
+    if (status_ == VehicleStatus::Loaded || hasCargo()) {
+        return false;
+    }
+
+    if (fuelTank_.isFull()) {
+        return false;
+    }
+
+    status_ = VehicleStatus::Refueling;
+    return true;
 }
 
 bool Vehicle::refuel(int amount) {
@@ -182,7 +193,7 @@ bool Vehicle::stopRefueling() {
 std::string Vehicle::statusToString(VehicleStatus status) {
     switch(status) {
         case VehicleStatus::Available:
-            return "Availible";
+            return "Available";
 
         case VehicleStatus::InTransit:
             return "In Transit";
@@ -205,8 +216,8 @@ Vehicle createVehicle() {
     std::cout << std::endl;
 
     std::string id = readNonEmptyWord("Please enter the vehicle ID: ");
-    std::string name = readNonEmptyWord("Please enter the vehicle name: ");
-    int fuelLvl = readIntInRange("Please enter the fuel level (1 --> 100): ", 1, 100);
+    std::string name = readNonEmptyLine("Please enter the vehicle name: ");
+    int fuelLvl = readIntInRange("Please enter the fuel level (0 --> 100): ", 0, 100);
     int maximumCargoWeight = readIntInRange("Please enter the maximum cargo weight (1 --> 10000): ", 1, 10000);
 
     std::cout << std::endl;

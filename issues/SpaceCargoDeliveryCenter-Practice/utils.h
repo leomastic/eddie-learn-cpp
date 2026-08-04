@@ -8,3 +8,4 @@ double readDoubleInRange(const std::string& prompt, double minValue, double maxV
 bool readYesNo(const std::string& prompt);
 
 std::string readNonEmptyWord(const std::string& prompt);
+std::string readNonEmptyLine(const std::string& prompt);

@@ -45,6 +45,28 @@ void testVehicle() {
     expect(vehicle.completeDelivery(), "Vehicle completes delivery");
     expect(vehicle.isAvailable(), "Vehicle becomes available after completion");
     expect(!vehicle.hasCargo(), "Vehicle cargo assignment clears");
+
+    Vehicle refuelVehicle("V002", "Hauler", 30, 500);
+    expect(refuelVehicle.startRefueling(), "Available vehicle can start refueling");
+    expect(refuelVehicle.status() == VehicleStatus::Refueling, "Vehicle enters refueling state");
+    expect(refuelVehicle.refuel(40), "Vehicle accepts fuel");
+    expect(refuelVehicle.fuelLevel() == 70, "Fuel increases to 70");
+
+    Vehicle emptyVehicle("V003", "Hauler", 0, 500);
+    expect(emptyVehicle.status() == VehicleStatus::OutOfService, "Empty vehicle starts out of service");
+    expect(emptyVehicle.startRefueling(), "Empty vehicle can start refueling");
+
+    Vehicle loadedVehicle("V004", "Hauler", 80, 500);
+    expect(loadedVehicle.loadCargo("C002", 100), "Cargo is loaded");
+    expect(!loadedVehicle.startRefueling(), "Loaded vehicle cannot refuel");
+
+    Vehicle strandedVehicle("V005", "Hauler", 20, 500);
+    expect(strandedVehicle.loadCargo("C003", 100), "Load cargo");
+    expect(strandedVehicle.startDelivery(), "Start delivery");
+    expect(strandedVehicle.travel(30), "Consume remaining fuel");
+    expect(strandedVehicle.status() == VehicleStatus::OutOfService, "Vehicle becomes out of service");
+    expect(strandedVehicle.hasCargo(), "Vehicle still carries cargo");
+    expect(!strandedVehicle.startRefueling(), "Vehicle carrying cargo cannot refuel");
 }
 
 void testDeliveryCenter() {

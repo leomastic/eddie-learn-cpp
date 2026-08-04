@@ -1,5 +1,4 @@
 #include "utils.h"
-
 #include <iostream>
 
 int readIntInRange(const std::string& prompt, int minValue, int maxValue) {
@@ -81,6 +80,20 @@ std::string readNonEmptyWord(const std::string& prompt) {
         if (!value.empty()) {
             return value;
         }
+        std::cout << "Value cannot be empty." << std::endl;
+    }
+}
+
+std::string readNonEmptyLine(const std::string& prompt) {
+    while (true) {
+        std::cout << prompt;
+        std::string value;
+        std::getline(std::cin, value);
+
+        if (!value.empty()) {
+            return value;
+        }
+
         std::cout << "Value cannot be empty." << std::endl;
     }
 }

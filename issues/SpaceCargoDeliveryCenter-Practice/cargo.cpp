@@ -120,7 +120,7 @@ std::string Cargo::statusToString(CargoStatus status) {
             return "In Transit";
 
         case CargoStatus::Delivered:
-            return "Deliverd";
+            return "Delivered";
 
         case CargoStatus::Cancelled:
             return "Cancelled";
@@ -134,7 +134,7 @@ Cargo createCargo() {
     std::cout << std::endl;
 
     std::string id = readNonEmptyWord("Please enter the cargo id: ");
-    std::string description = readNonEmptyWord("Please enter the cargo description: ");
+    std::string description = readNonEmptyLine("Please enter the cargo description: ");
     int weight = readIntInRange("Please enter the cargo weight (1 --> 1000): ", 1, 1000);
 
     std::cout << std::endl;
