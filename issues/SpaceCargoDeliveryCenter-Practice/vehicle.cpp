@@ -155,7 +155,7 @@ bool Vehicle::startRefueling() {
         return false;
     }
 
-    if (status_ == VehicleStatus::Loaded || hasCargo()) {
+    if (hasCargo()) {
         return false;
     }
 
@@ -206,10 +206,9 @@ std::string Vehicle::statusToString(VehicleStatus status) {
 
         case VehicleStatus::Refueling:
             return "Refueling";
-
-        default:
-            return "Unknown";
     }
+
+    return "Unknown";
 }
 
 Vehicle createVehicle() {
@@ -232,13 +231,13 @@ void Vehicle::print() const {
     std::cout << "Vehicle name: " << name_ << std::endl;
     std::cout << "Fuel level: " << fuelLevel() << std::endl;
     std::cout << "Fuel status: " << fuelTank_.statusToString(fuelStatus()) << std::endl;
-    std::cout << "Maximum Cargo Weight: " << maximumCargoWeight_ << std::endl;
+    std::cout << "Maximum cargo weight: " << maximumCargoWeight_ << std::endl;
     if(!assignedCargoId_.empty()) {
-        std::cout << "Assigned Cargo ID: " << assignedCargoId_ << std::endl;
-        std::cout << "Assign Cargo Weight: " << assignedCargoWeight_ << std::endl;
+        std::cout << "Assigned cargo: " << assignedCargoId_ << std::endl;
+        std::cout << "Assigned cargo weight: " << assignedCargoWeight_ << std::endl;
     } else {
-        std::cout << "Assign Cargo ID: None" << std::endl;
-        std::cout << "Assign Cargo Weight: 0" << std::endl;
+        std::cout << "Assigned cargo: None" << std::endl;
+        std::cout << "Assigned cargo weight: 0" << std::endl;
     }
     std::cout << "Status: " << statusToString(status_) << std::endl;
 }

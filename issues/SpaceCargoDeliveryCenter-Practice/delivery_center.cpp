@@ -100,6 +100,14 @@ bool DeliveryCenter::startDelivery(const std::string& cargoId) {
 
     Vehicle& vehicle = vehicles_[vehicleIndex];
 
+    if (vehicle.assignedCargoId() != cargo.id()) {
+        return false;
+    }
+
+    if (cargo.assignedVehicleId() != vehicle.id()) {
+        return false;
+    }
+
     if (!vehicle.startDelivery()) {
         return false;
     }
@@ -194,6 +202,14 @@ bool DeliveryCenter::cancelDelivery(const std::string& cargoId) {
         }
 
         Vehicle& vehicle = vehicles_[vehicleIndex];
+
+        if (vehicle.assignedCargoId() != cargo.id()) {
+            return false;
+        }
+
+        if (cargo.assignedVehicleId() != vehicle.id()) {
+            return false;
+        }
 
         if (!vehicle.unloadCargo()) {
             return false;

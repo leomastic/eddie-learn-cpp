@@ -124,10 +124,9 @@ std::string Cargo::statusToString(CargoStatus status) {
 
         case CargoStatus::Cancelled:
             return "Cancelled";
-
-        default:
-            return "Unknown";
     }
+
+    return "Unknown";
 }
 
 Cargo createCargo() {
