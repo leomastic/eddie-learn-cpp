@@ -75,3 +75,14 @@
 34. The files I needed to think about most carefully were `greenhouse.cpp` and `greenhouse_center.cpp` because they encode the business rules, status priorities, atomic growth behavior, and center-level routing.
 
 35. Next time I’d start with a clearer separation of interface and implementation: define the class APIs first, then add tests immediately, and build incrementally after each feature.
+
+# Initialization Log
+
+1. First file created: `CMakeLists.txt`
+2. First successful build: after adding `main.cpp`, `water_tank.cpp`, and `plant_batch.cpp` to the project.
+3. First class completed: `WaterTank` and `PlantBatch` because they were the simplest self-contained classes.
+4. First compiler error: missing `Greenhouse::findPlantBatchIndexById` declaration in `greenhouse.h`.
+5. First linker error: not applicable once the missing header declaration was fixed.
+6. First test passed: `WaterTank` clamping and status tests.
+7. Final application build: `mars_greenhouse_control_center` built successfully.
+8. Final test build: `mars_greenhouse_control_tests` built successfully and all tests passed.

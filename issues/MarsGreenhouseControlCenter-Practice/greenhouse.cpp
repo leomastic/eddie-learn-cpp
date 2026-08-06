@@ -189,7 +189,7 @@ bool Greenhouse::advanceOneDay() {
     }
 
     int activeBatchCount = 0;
-    for (const auto& batch : plantBatches_) {
+    for (const PlantBatch& batch : plantBatches_) {
         if (batch.canGrow()) {
             activeBatchCount += 1;
         }
@@ -208,7 +208,7 @@ bool Greenhouse::advanceOneDay() {
         return false;
     }
 
-    for (auto& batch : plantBatches_) {
+    for (PlantBatch& batch : plantBatches_) {
         if (batch.canGrow()) {
             batch.growOneDay();
         }

@@ -184,7 +184,7 @@ void GreenhouseCenter::printAllGreenhouses() const {
         return;
     }
 
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         greenhouse.print();
         std::cout << std::endl;
     }
@@ -192,7 +192,7 @@ void GreenhouseCenter::printAllGreenhouses() const {
 
 int GreenhouseCenter::operationalGreenhouseCount() const {
     int count = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         if (greenhouse.status() == GreenhouseStatus::Operational) {
             count += 1;
         }
@@ -202,7 +202,7 @@ int GreenhouseCenter::operationalGreenhouseCount() const {
 
 int GreenhouseCenter::needsWaterGreenhouseCount() const {
     int count = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         if (greenhouse.status() == GreenhouseStatus::NeedsWater) {
             count += 1;
         }
@@ -212,7 +212,7 @@ int GreenhouseCenter::needsWaterGreenhouseCount() const {
 
 int GreenhouseCenter::environmentWarningGreenhouseCount() const {
     int count = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         if (greenhouse.status() == GreenhouseStatus::EnvironmentWarning) {
             count += 1;
         }
@@ -222,7 +222,7 @@ int GreenhouseCenter::environmentWarningGreenhouseCount() const {
 
 int GreenhouseCenter::criticalGreenhouseCount() const {
     int count = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         if (greenhouse.status() == GreenhouseStatus::Critical) {
             count += 1;
         }
@@ -232,7 +232,7 @@ int GreenhouseCenter::criticalGreenhouseCount() const {
 
 int GreenhouseCenter::offlineGreenhouseCount() const {
     int count = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         if (greenhouse.status() == GreenhouseStatus::Offline) {
             count += 1;
         }
@@ -246,7 +246,7 @@ double GreenhouseCenter::averageWaterLevel() const {
     }
 
     double total = 0.0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         total += greenhouse.waterLevel();
     }
 
@@ -259,7 +259,7 @@ double GreenhouseCenter::averageTemperature() const {
     }
 
     double total = 0.0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         total += greenhouse.temperature();
     }
 
@@ -272,7 +272,7 @@ double GreenhouseCenter::averageHumidity() const {
     }
 
     double total = 0.0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         total += greenhouse.humidity();
     }
 
@@ -281,7 +281,7 @@ double GreenhouseCenter::averageHumidity() const {
 
 int GreenhouseCenter::totalPlantBatchCount() const {
     int total = 0;
-    for (const auto& greenhouse : greenhouses_) {
+    for (const Greenhouse& greenhouse : greenhouses_) {
         total += static_cast<int>(greenhouse.plantBatchCount());
     }
     return total;
@@ -335,5 +335,5 @@ void GreenhouseCenter::printSummary() const {
 
     std::cout << "Greenhouse with most plant batches:" << std::endl;
     std::cout << greenhouses_[bestIndex].name() << std::endl;
-    std::cout << "Plant batchs: " << greenhouses_[bestIndex].plantBatchCount() << std::endl;
+    std::cout << "Plant batches: " << greenhouses_[bestIndex].plantBatchCount() << std::endl;
 }
