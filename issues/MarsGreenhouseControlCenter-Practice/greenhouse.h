@@ -34,6 +34,7 @@ public:
     GreenhouseStatus status() const;
 
     std::size_t plantBatchCount() const;
+    int plantBatchCurrentGrowthDays(const std::string& plantBatchId) const;
 
     bool isOperational() const;
     bool isOffline() const;

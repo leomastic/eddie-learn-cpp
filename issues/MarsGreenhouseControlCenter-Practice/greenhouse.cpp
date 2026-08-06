@@ -10,18 +10,15 @@ Greenhouse::Greenhouse(
     int waterLevel,
     int temperature,
     int humidity
-) 
+)
     : id_(std::move(id)),
-      name_(std::move(name)), 
-      waterTank_(
-          waterLevel >= 0
-              ? waterLevel
-              : 0
-      ), 
-      temperature_(std::move(temperature)),
+      name_(std::move(name)),
+      waterTank_(waterLevel),
+      temperature_(std::clamp(temperature, -100, 100)),
       humidity_(std::clamp(humidity, 0, 100)),
-      status_(GreenhouseStatus::Offline),
-      plantBatches_{} {
+      status_(GreenhouseStatus::Operational),
+      plantBatches_() {
+    updateStatus();
 }
 
 const std::string& Greenhouse::id() const {
@@ -141,6 +138,15 @@ int Greenhouse::findPlantBatchIndexById(const std::string& plantBatchId) const {
     }
 
     return -1;
+}
+
+int Greenhouse::plantBatchCurrentGrowthDays(const std::string& plantBatchId) const {
+    int index = findPlantBatchIndexById(plantBatchId);
+    if (index == -1) {
+        return -1;
+    }
+
+    return plantBatches_[index].currentGrowthDays();
 }
 
 bool Greenhouse::addPlantBatch(

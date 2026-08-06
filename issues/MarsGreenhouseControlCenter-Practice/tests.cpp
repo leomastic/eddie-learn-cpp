@@ -83,66 +83,55 @@ void testPlantBatch() {
 
 void testGreenhouseStatus() {
     Greenhouse operational("G1", "Alpha Greenhouse", 80, 24, 60);
-    expect(operational.restart(), "Restarting offline greenhouse should succeed");
     expect(operational.status() == GreenhouseStatus::Operational, "Operational greenhouse status is Operational");
 
     Greenhouse lowWater("G2", "Beta Greenhouse", 10, 24, 60);
-    expect(lowWater.restart(), "Restarting low water greenhouse should succeed");
     expect(lowWater.status() == GreenhouseStatus::NeedsWater, "Low water greenhouse status is Needs Water");
 
     Greenhouse emptyWater("G3", "Gamma Greenhouse", 0, 24, 60);
-    expect(emptyWater.restart(), "Restarting empty water greenhouse should succeed");
     expect(emptyWater.status() == GreenhouseStatus::Critical, "Empty water greenhouse status is Critical");
 
     Greenhouse tempWarning("G4", "Delta Greenhouse", 80, 35, 60);
-    expect(tempWarning.restart(), "Restarting temperature warning greenhouse should succeed");
     expect(tempWarning.status() == GreenhouseStatus::EnvironmentWarning, "Temperature warning greenhouse status is Environment Warning");
 
     Greenhouse dangerousTemp("G5", "Epsilon Greenhouse", 80, 50, 60);
-    expect(dangerousTemp.restart(), "Restarting dangerous temperature greenhouse should succeed");
     expect(dangerousTemp.status() == GreenhouseStatus::Critical, "Dangerous temperature greenhouse status is Critical");
 
     Greenhouse humidityWarning("G6", "Zeta Greenhouse", 80, 24, 30);
-    expect(humidityWarning.restart(), "Restarting humidity warning greenhouse should succeed");
     expect(humidityWarning.status() == GreenhouseStatus::EnvironmentWarning, "Humidity warning greenhouse status is Environment Warning");
 
     Greenhouse dangerousHumidity("G7", "Eta Greenhouse", 80, 24, 10);
-    expect(dangerousHumidity.restart(), "Restarting dangerous humidity greenhouse should succeed");
     expect(dangerousHumidity.status() == GreenhouseStatus::Critical, "Dangerous humidity greenhouse status is Critical");
 
     Greenhouse priority("G8", "Theta Greenhouse", 10, 50, 60);
-    expect(priority.restart(), "Restarting greenhouse with multiple issues should succeed");
     expect(priority.status() == GreenhouseStatus::Critical, "Status priority keeps Critical over Needs Water");
 
     Greenhouse offlineReject("G9", "Iota Greenhouse", 80, 24, 60);
+    expect(offlineReject.shutDown(), "Shutting down greenhouse should succeed");
     expect(!offlineReject.updateEnvironment(25, 65), "Offline greenhouse rejects environment updates");
     expect(!offlineReject.refillWater(10), "Offline greenhouse rejects water refills");
 
     Greenhouse restartStatus("G10", "Kappa Greenhouse", 0, 24, 60);
+    expect(restartStatus.shutDown(), "Shutting down empty greenhouse should succeed");
     expect(restartStatus.restart(), "Restarting empty greenhouse should succeed");
     expect(restartStatus.status() == GreenhouseStatus::Critical, "Restart recalculates status to Critical for empty water");
 }
 
 void testGreenhouseGrowth() {
     Greenhouse greenhouseA("GA", "Alpha", 80, 24, 60);
-    expect(greenhouseA.restart(), "Restart greenhouse A");
-
     expect(greenhouseA.addPlantBatch("P1", "Tomato", 3), "Add first plant batch");
     expect(!greenhouseA.addPlantBatch("P1", "Carrot", 2), "Duplicate plant batch ID fails");
 
     Greenhouse greenhouseB("GB", "Beta", 80, 24, 60);
-    expect(greenhouseB.restart(), "Restart greenhouse B");
     expect(greenhouseB.addPlantBatch("P1", "Tomato", 3), "Same plant batch ID allowed in a different greenhouse");
 
     Greenhouse greenhouseAdvance("GAdv", "Advance Greenhouse", 50, 24, 60);
-    expect(greenhouseAdvance.restart(), "Restart greenhouse for advance test");
     expect(greenhouseAdvance.addPlantBatch("A1", "Lettuce", 3), "Add active batch A1");
     expect(greenhouseAdvance.addPlantBatch("A2", "Pepper", 4), "Add active batch A2");
     expect(greenhouseAdvance.advanceOneDay(), "Advance one day with active batches succeeds");
     expect(greenhouseAdvance.waterLevel() == 46, "Advance one day consumes correct water amount");
 
     Greenhouse greenhouseAtomic("GAtomic", "Atomic Greenhouse", 5, 24, 60);
-    expect(greenhouseAtomic.restart(), "Restart greenhouse for atomic failure test");
     expect(greenhouseAtomic.addPlantBatch("B1", "A", 3), "Add atomic batch B1");
     expect(greenhouseAtomic.addPlantBatch("B2", "B", 3), "Add atomic batch B2");
     expect(greenhouseAtomic.addPlantBatch("B3", "C", 3), "Add atomic batch B3");
@@ -150,19 +139,18 @@ void testGreenhouseGrowth() {
     expect(greenhouseAtomic.waterLevel() == 0, "Insufficient water drains the tank to zero");
     expect(greenhouseAtomic.status() == GreenhouseStatus::Critical, "Insufficient water update status to Critical");
     expect(greenhouseAtomic.plantBatchCount() == 3, "Atomic failure keeps all plant batches present");
-
-    for (int index = 0; index < static_cast<int>(greenhouseAtomic.plantBatchCount()); ++index) {
-        expect(!greenhouseAtomic.addPlantBatch("B1", "A", 3) || true, "No growth occurred on failure");
-    }
+    expect(greenhouseAtomic.plantBatchCurrentGrowthDays("B1") == 0, "Batch B1 growth remains unchanged after failure");
+    expect(greenhouseAtomic.plantBatchCurrentGrowthDays("B2") == 0, "Batch B2 growth remains unchanged after failure");
+    expect(greenhouseAtomic.plantBatchCurrentGrowthDays("B3") == 0, "Batch B3 growth remains unchanged after failure");
 
     Greenhouse greenhouseCritical("GCrit", "Critical Greenhouse", 0, 50, 60);
-    expect(greenhouseCritical.restart(), "Restart critical greenhouse");
     expect(!greenhouseCritical.advanceOneDay(), "Critical greenhouse cannot advance");
 }
 
 void testGreenhouseCenter() {
     GreenhouseCenter center;
     expect(center.addGreenhouse("C1", "Center Alpha", 80, 24, 60), "Add greenhouse to center");
+    expect(center.shutDownGreenhouse("C1"), "Shut down greenhouse in center");
     expect(center.restartGreenhouse("C1"), "Restart greenhouse in center");
     expect(center.addPlantBatch("C1", "PB1", "Tomato", 1), "Add plant batch through center");
     expect(center.advanceGreenhouseOneDay("C1"), "Advance center greenhouse one day");
@@ -183,11 +171,12 @@ void testStatistics() {
     expect(center.addGreenhouse("S3", "Status EnvironmentWarning", 80, 35, 60), "Add environment-warning greenhouse");
     expect(center.addGreenhouse("S4", "Status Critical", 0, 24, 60), "Add critical greenhouse");
     expect(center.addGreenhouse("S5", "Status Offline", 80, 24, 60), "Add offline greenhouse");
+    expect(center.shutDownGreenhouse("S5"), "Shutdown greenhouse S5 to create offline status");
 
-    expect(center.restartGreenhouse("S1"), "Restart operational greenhouse");
-    expect(center.restartGreenhouse("S2"), "Restart needs-water greenhouse");
-    expect(center.restartGreenhouse("S3"), "Restart environment-warning greenhouse");
-    expect(center.restartGreenhouse("S4"), "Restart critical greenhouse");
+    expect(!center.restartGreenhouse("S1"), "Restart operational greenhouse should fail");
+    expect(!center.restartGreenhouse("S2"), "Restart needs-water greenhouse should fail");
+    expect(!center.restartGreenhouse("S3"), "Restart environment-warning greenhouse should fail");
+    expect(!center.restartGreenhouse("S4"), "Restart critical greenhouse should fail");
 
     expect(center.operationalGreenhouseCount() == 1, "Operational greenhouse count is correct");
     expect(center.needsWaterGreenhouseCount() == 1, "Needs water greenhouse count is correct");
@@ -205,8 +194,8 @@ void testStatistics() {
     GreenhouseCenter tieCenter;
     expect(tieCenter.addGreenhouse("T1", "Tie One", 80, 24, 60), "Add first tie greenhouse");
     expect(tieCenter.addGreenhouse("T2", "Tie Two", 80, 24, 60), "Add second tie greenhouse");
-    expect(tieCenter.restartGreenhouse("T1"), "Restart tie greenhouse T1");
-    expect(tieCenter.restartGreenhouse("T2"), "Restart tie greenhouse T2");
+    expect(!tieCenter.restartGreenhouse("T1"), "Restart tie greenhouse T1 should fail");
+    expect(!tieCenter.restartGreenhouse("T2"), "Restart tie greenhouse T2 should fail");
     expect(tieCenter.addPlantBatch("T1", "X1", "Plant", 1), "Add batch to T1");
     expect(tieCenter.addPlantBatch("T1", "X2", "Plant", 1), "Add second batch to T1");
     expect(tieCenter.addPlantBatch("T2", "Y1", "Plant", 1), "Add batch to T2");
