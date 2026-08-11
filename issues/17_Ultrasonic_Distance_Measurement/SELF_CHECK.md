@@ -71,10 +71,10 @@
 ### **Personal Observations**
 
 23. **Which object produced your most stable measurement?**  
-    A flat, hard, smooth surface like a cardboard box or a thick book facing directly toward the sensor.
+    A cardboard box or a thick book facing directly toward the sensor.
 
 24. **At which tested distance was your sensor most accurate?**  
-    Between 10 cm and 30 cm.
+    10 cm distance.
 
 25. **What was the most surprising thing you discovered about the ultrasonic sensor?**  
-    Soft materials (like fabric or sponge) absorb the sound waves and fail to reflect an echo, making them invisible or inaccurate to the sensor.
+    The way it used ultrasonic to detect obstacle and measure the distance to obstacle.
