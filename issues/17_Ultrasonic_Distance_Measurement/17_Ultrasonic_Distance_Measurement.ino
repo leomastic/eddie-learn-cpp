@@ -8,25 +8,6 @@ void setup() {
     pinMode(echoPin, INPUT);
 }
 
-//float measureDistanceCm() {
-//    digitalWrite(trigPin, LOW);
-//    delayMicroseconds(2);
-
-//    digitalWrite(trigPin, HIGH);
-//    delayMicroseconds(10);
-
-//    digitalWrite(trigPin, LOW);
-
-//    long duration = pulseIn(echoPin, HIGH);
-//  long duration =                     = \ "30000 is mean do not run forever, run for only 30000 microseconds = 30 miliseconds"
-//      pulseIn(echoPin, HIGH, 30000);  = /
-
-//    float distanceCm =
-//        duration * 0.0343 / 2.0;
-
-//    return distanceCm;
-//}
-
 float measureDistanceCm() {
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
@@ -36,8 +17,8 @@ float measureDistanceCm() {
 
     digitalWrite(trigPin, LOW);
 
-    long duration =
-        pulseIn(echoPin, HIGH, 30000);
+    long duration =                 
+        pulseIn(echoPin, HIGH, 30000);  // "30000 is mean do not run forever, run for only 30000 microseconds = 30 miliseconds"
 
     if (duration == 0) {
         return -1;
