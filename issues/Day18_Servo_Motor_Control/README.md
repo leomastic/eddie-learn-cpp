@@ -96,11 +96,11 @@ Due to mechanical mounting alignment and gear tolerances, software angles did no
 ## Small Angle Experiment
 |     Commanded Angle     | Observed Direction |         Observation       |
 | :---------------------- | :----------------- | :------------------------ |
-| **Center - 20° (73°)**  |    Slightly Left   |       Clear movement      |
-| **Center - 10° (83°)**  |    Slightly Left   | Noticeable position shift |
+| **Center - 20° (73°)**  |   Right Of Center  |       Clear movement      |
+| **Center - 10° (83°)**  |    Slightly Right  | Noticeable position shift |
 |    **Center (93°)**     |    Straight Ahead  |       Fully centered      |
-| **Center + 10° (103°)** |    Slightly Right  | Noticeable position shift |
-| **Center + 20° (113°)** |    Slightly Right  |       Clear movement      |
+| **Center + 10° (103°)** |    Slightly Left   | Noticeable position shift |
+| **Center + 20° (113°)** |   Left Of Center   |       Clear movement      |
 
 * **5° change:** Noticeable on normal inspection.
 * **10° change:** Easily visible physical rotation.

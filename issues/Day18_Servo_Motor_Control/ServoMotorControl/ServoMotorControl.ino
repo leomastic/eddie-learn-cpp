@@ -72,10 +72,10 @@ void loop() {
     //moveServoTo(113);
     //delay(3000);
 
-    moveServoTo(servoLeftangle);
+    moveServoTo(servoLeftAngle);
     delay(1500);
 
-    for (int angle = servoRightAngle; // turn servo to the right
+    for (int angle = servoRightAngle; // turn servo to the left
      angle <= servoLeftAngle;
      angle += 5) {
 
@@ -83,7 +83,7 @@ void loop() {
         delay(100);
     }
 
-    for (int angle = servoLeftAngle; // turn servo to the left
+    for (int angle = servoLeftAngle; // turn servo to the right
      angle >= servoRightAngle;
      angle -= 5) {
 
