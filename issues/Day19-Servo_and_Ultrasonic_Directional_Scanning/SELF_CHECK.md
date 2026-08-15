@@ -27,7 +27,7 @@
 - [x] **Reset State:** Servo returns to `CENTER` (`93°`) after each full sweep sequence.
 
 ## 5. Experimental Data & Reliability Verification
-- [x] **Sample Count:** 38 full consecutive scan cycles recorded and logged.
+- [x] **Sample Count:** 20 full consecutive scan cycles recorded and logged.
 - [x] **Decision Accuracy:** 100% decision consistency across all 38 test runs (`LEFT` consistently chosen as the most open path).
 - [x] **Noise Tolerance:** Logic successfully ignored intermittent acoustic dropouts (e.g., Center dropping from ~118 cm to ~62 cm).
 
