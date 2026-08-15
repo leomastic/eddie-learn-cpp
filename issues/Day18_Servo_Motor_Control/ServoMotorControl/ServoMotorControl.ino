@@ -61,7 +61,7 @@ void loop() {
     //delay(3000);
 
     //moveServoTo(83);
-    //delay(3000);
+    //delay(3000);  
 
     moveServoTo(servoCenterAngle);
     delay(3000);
