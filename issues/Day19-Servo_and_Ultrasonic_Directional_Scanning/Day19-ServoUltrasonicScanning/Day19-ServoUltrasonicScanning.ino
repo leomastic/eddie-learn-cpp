@@ -47,9 +47,6 @@ const char* directionToString(ScanDirection direction) {
 
         case ScanDirection::Unknown:
             return "UNKNOWN";
-
-        case ScanDirection::Unknown:
-            return servoCenterAngle;
     }
 }
 
