@@ -13,13 +13,13 @@ const int servoPin = 9;
 
 // --- Speed Calibration ---
 const int forwardLeftPwm = 120;
-const int forwardRightPwm = 160;
+const int forwardRightPwm = 120;
 
-const int turnFromStopLeftPwm = 90;
-const int turnFromStopRightPwm = 170;
+const int turnFromStopLeftPwm = 120;
+const int turnFromStopRightPwm = 160;
 
 const int turnWhileMovingLeftPwm = 120;
-const int turnWhileMovingRightPwm = 150;
+const int turnWhileMovingRightPwm = 160;
 
 const int reverseLeftPwm = 120;
 const int reverseRightPwm = 160;
