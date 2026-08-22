@@ -4,7 +4,7 @@
 Observe and calibrate the two downward-facing infrared (IR) line-tracking sensors on the KE3066 robot in isolation (wheels stationary). The objective is to determine real-world logic polarities (`HIGH`/`LOW` vs. Black/White), structure state abstractions using `LineSensorState`, and understand physical environmental constraints (mounting height, surface reflectivity, boundary sensitivity, and line geometry) before implementing autonomous line following.
 
 ## Hardware
-* **Microcontroller:** Arduino Uno (KE3066 Mainboard)
+* **Microcontroller:** Arduino Nano-compatible KE3066 controller
 * **Sensors:** 2x Downward-facing IR Line-Tracking Sensor Modules (IR Emitter/Receiver pair with onboard LM393 comparator)
 
 ## Pin Mapping
@@ -73,12 +73,14 @@ LEFT  = LINE
 RIGHT = LINE
 
 ## Sensor Height Experiment
-0mm: White stable
-2mm: White stable
-5mm: White stable
-10mm: ONLY LEFT: White stable
-12mm: Black stable
-> 12mm: Black stable
+| Height | Left reading | Right reading | White interpreted correctly? |
+| :--- | :---: | :---: | :---: |
+| **normal** | Yes | Yes | Yes |
+| **+2 mm** | Yes | Yes | Yes |
+| **+5 mm** | Yes | Yes | Yes |
+| **+10 mm** | Yes | No | Half |
+| **+12 mm** | No | No | No |
+| **>12 mm** | No | No | No |
 
 ## Surface Material Experiment
 White paper: 0 (BOTH BACKGROUND)
@@ -90,13 +92,15 @@ My red cardboard: 0 (BOTH BACKGROUND)
 I dont have any stuff tho
 
 ## Boundary Experiment
-The sensor is highly sensitive, it can yield a result from a distance of just 0.1mm or less
+Very small movements near the black/white boundary can flip the digital reading.
 
 ## Line Width Experiment
 | Line width | Typical centered sensor state | Observation |
 | :--- | :--- | :--- |
-| **Narrow** | BOTH BACKGROUND | Can't see line |
-| **Wide** | BOTH ON LINE | Can see line |
+| **Narrow** (10 mm) | BOTH BACKGROUND | Can't see line |
+| **Wide** (35 mm) | BOTH ON LINE | Can see line |
+
+Sensor center spacing: 20 mm
 
 ## Stability Experiment
 

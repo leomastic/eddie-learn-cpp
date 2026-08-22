@@ -17,21 +17,19 @@ LineSensorState readLineSensorState() {
     bool rightOnLine =
         detectsLine(trackingRightPin);
 
-    if(leftOnLine && rightOnLine) {
+    if (leftOnLine && rightOnLine) {
         return LineSensorState::BothOnLine;
     }
 
-    if(!leftOnLine && rightOnLine) {
-        return LineSensorState::RightOnLine;
-    }
-
-    if(leftOnLine && !rightOnLine) {
+    if (leftOnLine) {
         return LineSensorState::LeftOnLine;
     }
 
-    if(!leftOnLine && !rightOnLine) {
-        return LineSensorState::BothBackground;
+    if (rightOnLine) {
+        return LineSensorState::RightOnLine;
     }
+
+    return LineSensorState::BothBackground;
 }
 
 bool detectsLine(int pin) {
@@ -42,21 +40,21 @@ bool detectsLine(int pin) {
 const char* lineStateToString(
     LineSensorState state
 ) {
-    if(state == LineSensorState::BothBackground) {
-        return "BOTH BACKGROUND";
+    switch (state) {
+        case LineSensorState::BothBackground:
+            return "BOTH BACKGROUND";
+
+        case LineSensorState::LeftOnLine:
+            return "LEFT ON LINE";
+
+        case LineSensorState::RightOnLine:
+            return "RIGHT ON LINE";
+
+        case LineSensorState::BothOnLine:
+            return "BOTH ON LINE";
     }
 
-    if(state == LineSensorState::BothOnLine) {
-        return "BOTH ON LINE";
-    }
-
-    if(state == LineSensorState::LeftOnLine) {
-        return "LEFT ON LINE";
-    }
-
-    if(state == LineSensorState::RightOnLine) {
-        return "RIGHT ON LINE";
-    }
+    return "UNKNOWN";
 }
 
 void setup() {
@@ -69,14 +67,34 @@ void setup() {
 void loop() {
     Serial.println("-----------------");
 
-    LineSensorState state =
-        readLineSensorState();
+    int leftRaw =
+    digitalRead(trackingLeftPin);
+
+    int rightRaw =
+        digitalRead(trackingRightPin);
 
     Serial.print("LEFT raw: ");
-    Serial.println(detectsLine(trackingLeftPin));
+    Serial.println(leftRaw);
 
     Serial.print("RIGHT raw: ");
-    Serial.println(detectsLine(trackingRightPin));
+    Serial.println(rightRaw);
+
+    Serial.print("LEFT meaning: ");
+    Serial.println(
+        detectsLine(trackingLeftPin)
+            ? "LINE"
+            : "BACKGROUND"
+    );
+
+    Serial.print("RIGHT meaning: ");
+    Serial.println(
+        detectsLine(trackingRightPin)
+            ? "LINE"
+            : "BACKGROUND"
+    );
+
+    LineSensorState state =
+        readLineSensorState();
 
     Serial.print("STATE: ");
     Serial.println(
