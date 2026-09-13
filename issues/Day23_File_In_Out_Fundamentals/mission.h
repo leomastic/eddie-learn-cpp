@@ -8,7 +8,6 @@ private:
     int priority_;
 
 public:
-    Mission();
     Mission(const std::string& name, int priority);
 
     const std::string& getName() const;

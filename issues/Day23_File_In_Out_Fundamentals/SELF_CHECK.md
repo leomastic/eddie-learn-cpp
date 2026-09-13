@@ -22,7 +22,7 @@
    - Opening can fail for many reasons (permissions, missing directory, disk issues); writing/reading without checking can cause data loss or crashes.
 
 8. What does `file.close()` do?
-   - Flushes and releases the file handle; indicates the program is done accessing the file.
+    - Closes the stream's associated file. Any buffered output is written (flushed) as part of closing the output stream.
 
 9. What happens to an output file's existing content when opened normally with `std::ofstream`?
    - It is overwritten (replaced).
@@ -115,7 +115,7 @@
     - Create/modify Mission objects in memory → `saveMissions()` writes lines to file → program exits → restart → `loadMissions()` reads file lines, parses and validates them, and reconstructs Mission objects in memory.
 
 39. What was the hardest bug you encountered?
-    - (Answer in your own words when you implement and run) Common issue: forgetting to consume the newline after `>>`, making `getline()` read an empty string.
+    - The loader crashed when `std::stoi()` was called on malformed priority text (for example, `Repair Rover|abc` or `Repair Rover|3abc`). Tracking this down required realizing that file data must be fully validated before conversion.
 
 40. What was the most interesting thing you learned about file I/O?
-    - (Answer in your own words) Files are persistent but untrusted; always validate data even if your program wrote it.
+    - Even data your program writes should be treated as untrusted input. The parsing pipeline (file → parse → validate → use) is essential: validate every field before converting or constructing runtime objects.

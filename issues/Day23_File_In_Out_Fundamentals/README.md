@@ -60,13 +60,22 @@ Loaded 3 missions from missions.txt
 Empty lines and lines without the delimiter are skipped with no crash.
 
 ## Project Structure
+## Project Structure
 - CMakeLists.txt
 - main.cpp
-- main.h
-- activity.log (created during use)
-- missions.txt (created by Save)
+- mission.h
+- mission.cpp
+- file_io.h
+- file_io.cpp
+- README.md
+- SELF_CHECK.md
 
-## Problems Observed
+Runtime-generated files (created when you run the program):
+- activity.log
+- missions.txt
+
+## Malformed File Tests
+Empty lines and lines without the delimiter are skipped with no crash. Priority text is validated as numeric before conversion (so inputs like `Repair Rover|abc` or `Repair Rover|3abc` are skipped and will not crash the loader).
 - Files can be manually edited and become malformed — loader skips bad lines.
 
 ## Most Interesting Observation
