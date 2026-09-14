@@ -56,10 +56,6 @@ Example after saving 3 missions and restarting:
 Loaded 3 missions from missions.txt
 ```
 
-## Malformed File Tests
-Empty lines and lines without the delimiter are skipped with no crash.
-
-## Project Structure
 ## Project Structure
 - CMakeLists.txt
 - main.cpp
@@ -75,8 +71,20 @@ Runtime-generated files (created when you run the program):
 - missions.txt
 
 ## Malformed File Tests
-Empty lines and lines without the delimiter are skipped with no crash. Priority text is validated as numeric before conversion (so inputs like `Repair Rover|abc` or `Repair Rover|3abc` are skipped and will not crash the loader).
-- Files can be manually edited and become malformed — loader skips bad lines.
+The loader skips malformed lines without crashing.
+
+Observed examples:
+- `Repair Rover|abc` -> skipped, no crash
+- `Repair Rover|3abc` -> skipped, no crash
+- `Repair Rover|` -> skipped, no crash
+- `Repair Rover|-2` -> skipped, no crash
+- `Repair Rover|99` -> skipped, no crash
+- `Repair Rover|999999999999999999999999` -> skipped, no crash
+
+A valid mission still loads normally when the priority is exactly one digit from `1` to `5`.
+
+## Unsaved-Data Experiment
+Normally, unsaved in-memory data disappears when the process ends. In this particular program, the Exit option auto-saves before the program ends, so a normal Exit does not demonstrate that behavior. To observe unsaved-data loss, auto-save would need to be disabled temporarily, or the program would have to terminate before reaching the auto-save path.
 
 ## Most Interesting Observation
 Files are untrusted input: even data your program produced must be validated before use.

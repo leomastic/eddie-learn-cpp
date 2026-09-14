@@ -2,24 +2,13 @@
 
 #include <fstream>
 #include <string>
-#include <cctype>
 
-// Validate that a text string represents a positive integer (allow leading/trailing whitespace)
-static bool isPositiveIntegerText(const std::string& text) {
-    if (text.empty()) { return false; }
-
-    // Trim leading/trailing whitespace
-    std::size_t start = 0;
-    std::size_t end = text.size();
-    while (start < end && std::isspace(static_cast<unsigned char>(text[start]))) { ++start; }
-    while (end > start && std::isspace(static_cast<unsigned char>(text[end - 1]))) { --end; }
-    if (start == end) { return false; }
-
-    for (std::size_t i = start; i < end; ++i) {
-        char c = text[i];
-        if (c < '0' || c > '9') { return false; }
+bool isValidPriorityText(const std::string& text) {
+    if (text.size() != 1) {
+        return false;
     }
-    return true;
+
+    return text[0] >= '1' && text[0] <= '5';
 }
 
 bool saveMissions(const std::string& filename, const std::vector<Mission>& missions) {
@@ -54,7 +43,7 @@ std::vector<Mission> loadMissions(const std::string& filename) {
         std::string name = line.substr(0, sep);
         std::string priText = line.substr(sep + 1);
 
-        if (!isPositiveIntegerText(priText)) { continue; }
+        if (!isValidPriorityText(priText)) { continue; }
 
         int pri = std::stoi(priText);
 

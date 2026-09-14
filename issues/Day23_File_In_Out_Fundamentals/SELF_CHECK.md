@@ -55,7 +55,7 @@
     - Data that survives program termination by storing it on disk (files/databases).
 
 19. What happens to a mission added in memory but never saved?
-    - It is lost when the program exits.
+    - Normally, it is lost when the process ends because RAM is temporary. In this particular program, the Exit menu option auto-saves before the program closes, so a normal Exit does not demonstrate that behavior. To observe unsaved-data loss, auto-save would need to be disabled temporarily or the process would have to end before reaching the auto-save path.
 
 20. What happens after it is saved?
     - It is written to disk and can be reloaded on the next run.
