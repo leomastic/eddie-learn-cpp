@@ -5,18 +5,12 @@
 
 namespace {
 
-bool isPositiveIntegerText(const std::string& text) {
-    if (text.empty()) {
+bool isValidSeverityText(const std::string& text) {
+    if (text.empty() || text.size() != 1) {
         return false;
     }
 
-    for (char ch : text) {
-        if (ch < '0' || ch > '9') {
-            return false;
-        }
-    }
-
-    return true;
+    return text[0] >= '1' && text[0] <= '5';
 }
 
 bool parseLine(const std::string& line, MaintenanceRecord& record) {
@@ -44,14 +38,11 @@ bool parseLine(const std::string& line, MaintenanceRecord& record) {
         return false;
     }
 
-    if (!isPositiveIntegerText(severityText)) {
+    if (!isValidSeverityText(severityText)) {
         return false;
     }
 
     const int severity = std::stoi(severityText);
-    if (severity < 1 || severity > 5) {
-        return false;
-    }
 
     record = MaintenanceRecord(component, date, severity, notes);
     return true;

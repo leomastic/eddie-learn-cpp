@@ -169,12 +169,10 @@ int main() {
             }
 
             case MenuChoice::Reload: {
-                MaintenanceLog backup = log;
                 if (loadMaintenanceLog(filename, log)) {
                     std::cout << "Maintenance log reloaded from " << filename << std::endl;
                 } else {
                     std::cout << "Failed to reload maintenance log. Existing records remain unchanged." << std::endl;
-                    log = backup;
                 }
                 break;
             }
