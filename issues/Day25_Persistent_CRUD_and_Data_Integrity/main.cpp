@@ -44,7 +44,15 @@ int readPositiveInt(const std::string& prompt) {
 }
 
 int readSeverity(const std::string& prompt) {
-    return readPositiveInt(prompt);
+    while (true) {
+        const int value = readPositiveInt(prompt);
+
+        if (value >= 1 && value <= 5) {
+            return value;
+        }
+
+        std::cout << "Severity must be between 1 and 5." << std::endl;
+    }
 }
 
 std::string readRequiredText(const std::string& prompt) {
@@ -152,11 +160,7 @@ int main() {
             case MenuChoice::AddRecord: {
                 const std::string component = readRequiredText("Component: ");
                 const std::string date = readRequiredText("Date (YYYY-MM-DD): ");
-                const int severity = readPositiveInt("Severity (1-5): ");
-                if (severity < 1 || severity > 5) {
-                    std::cout << "Severity must be between 1 and 5." << std::endl;
-                    break;
-                }
+                const int severity = readSeverity("Severity (1-5): ");
 
                 const std::string notes = readRequiredText("Notes: ");
                 const int newId = log.addRecord(component, date, severity, notes);
@@ -178,11 +182,7 @@ int main() {
 
                 const std::string component = readRequiredText("New component: ");
                 const std::string date = readRequiredText("New date (YYYY-MM-DD): ");
-                const int severity = readPositiveInt("New severity (1-5): ");
-                if (severity < 1 || severity > 5) {
-                    std::cout << "Severity must be between 1 and 5." << std::endl;
-                    break;
-                }
+                const int severity = readSeverity("New severity (1-5): ");
                 const std::string notes = readRequiredText("New notes: ");
 
                 if (log.updateRecord(id, component, date, severity, notes)) {

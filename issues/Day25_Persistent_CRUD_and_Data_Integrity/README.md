@@ -25,6 +25,7 @@ This project extends the Day 24 persistence exercise with Create, Read, Update, 
 - Update must validate all values before writing to the object.
 - Unknown IDs must fail without changing the log.
 - Malformed persisted records are skipped safely.
+- Duplicate persisted IDs are rejected so one record cannot overwrite another.
 - Deleting record 2 does not rename record 3 into ID 2.
 
 ## Experiment results
@@ -70,6 +71,16 @@ This project extends the Day 24 persistence exercise with Create, Read, Update, 
 - `abc|Motor|2026-09-18|3|Test` was skipped.
 - `999999999999999999999999|Motor|2026-09-18|3|Test` was skipped.
 - The program did not crash.
+
+### I. Duplicate persisted IDs
+
+- File content:
+
+  `3|Motor|2026-10-01|2|First`
+  `3|Servo|2026-10-02|4|Duplicate`
+
+- Result: the first record with ID 3 is loaded; the duplicate ID 3 is skipped.
+- The program does not crash, and data integrity is preserved.
 
 ## Notes
 
