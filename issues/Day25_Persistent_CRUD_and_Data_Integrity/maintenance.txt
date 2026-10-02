@@ -1,0 +1,5 @@
+2|Servo|2026-09-18|2|Movement slightly noisy
+8|Motor|2026-09-18|5|Loud
+5|Ultrasonic|2026-09-18|3|Some readings return -1
+abc|Motor|2026-09-18|3|Bad
+999999999999999999999999|Motor|2026-09-18|3|Bad
