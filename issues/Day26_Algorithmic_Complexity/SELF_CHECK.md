@@ -35,8 +35,10 @@
 33. Preprocessing can make later queries faster by avoiding repeated costly work.
 34. The fastest theoretical algorithm is not always the best to implement because it may be much harder to write, test, and debug.
 35. Before implementing an HSG solution, ask: what are the constraints, what is the naive algorithm, what is the rough complexity, and is it likely fast enough?
-36. The problem that most clearly forces us to avoid a naïve algorithm is the teacher's large-limit problem, because the cost of checking everything becomes huge.
-37. I am most likely to make the mistake of forgetting to estimate the maximum workload before coding.
-38. The hardest idea to understand today was realizing that a nested loop can quickly become a huge number of operations even when each loop looks simple.
-39. The most interesting thing I learned was that the same algorithm can be perfectly fine for small N but completely impossible for large N.
-40. My personal analysis is that complexity is not just about correctness; it is about choosing a strategy that fits the problem's real limits.
+36. I choose Teacher Problem #17 (Special Prime). With n ≤ 100,000 and a_i ≤ 10^12, checking divisors up to sqrt(a_i) for every value could require about 10^11 checks, so divisor enumeration is not suitable.
+37. What complexity mistake do you think you are most likely to make?
+38. What will you do to avoid making that mistake?
+39. What was the hardest idea to understand today?
+40. What was the most interesting thing you learned today?
+
+Write your own answers to questions 37-40.
