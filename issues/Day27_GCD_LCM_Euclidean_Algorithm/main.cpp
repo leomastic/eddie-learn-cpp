@@ -139,10 +139,16 @@ int main() {
 
     if (choice == 4) {
         int n = 0;
-        std::cin >> n;
+        if (!(std::cin >> n) || n < 1 || n > 100000) {
+            std::cerr << "N must be between 1 and 100000.\n";
+            return 1;
+        }
         std::vector<long long> numbers(static_cast<std::size_t>(n));
         for (int i = 0; i < n; ++i) {
-            std::cin >> numbers[static_cast<std::size_t>(i)];
+            if (!(std::cin >> numbers[static_cast<std::size_t>(i)])) {
+                std::cerr << "Could not read all vector values.\n";
+                return 1;
+            }
         }
         std::cout << gcdOfVector(numbers) << '\n';
         return 0;
@@ -153,6 +159,22 @@ int main() {
         long long b = 0;
         std::cin >> a >> b;
         std::cout << lcmUsingGcd(a, b) << '\n';
+        return 0;
+    }
+
+    if (choice == 6) {
+        long long redObjects = 0;
+        long long blueObjects = 0;
+        std::cin >> redObjects >> blueObjects;
+        std::cout << gcdEuclid(redObjects, blueObjects) << '\n';
+        return 0;
+    }
+
+    if (choice == 7) {
+        long long intervalA = 0;
+        long long intervalB = 0;
+        std::cin >> intervalA >> intervalB;
+        std::cout << lcmUsingGcd(intervalA, intervalB) << '\n';
         return 0;
     }
 

@@ -133,6 +133,12 @@ Predicted and verified:
   - `42 % 21 = 0`
   - answer `21`
 
+- `gcd(1071,462)`
+  - `1071 % 462 = 147`
+  - `462 % 147 = 21`
+  - `147 % 21 = 0`
+  - answer `21`
+
 This matches the direct calculation of the code and confirms the Euclidean identity.
 
 ## Experiment 3 --- Coprime cases
@@ -148,14 +154,38 @@ This reinforces that coprime does not mean both numbers are prime themselves.
 
 ## Experiment 4 --- GCD of many values
 
-Starting from `currentGcd = 0`:
-- after `24`: `currentGcd = 24`
-- after `36`: `currentGcd = 12`
-- after `60`: `currentGcd = 12`
-- after `48`: `currentGcd = 12`
-- after `72`: `currentGcd = 12`
+I ran all three required sequences. The running values below show `next value: before -> after`.
 
-The final answer is `12`, which is the GCD of all values.
+### `24 36 60`
+
+```text
+24: 0 -> 24
+36: 24 -> 12
+60: 12 -> 12
+Output: 12
+```
+
+### `18 24 30 42`
+
+```text
+18: 0 -> 18
+24: 18 -> 6
+30: 6 -> 6
+42: 6 -> 6
+Output: 6
+```
+
+### `17 34 51 85`
+
+```text
+17: 0 -> 17
+34: 17 -> 17
+51: 17 -> 17
+85: 17 -> 17
+Output: 17
+```
+
+Each sequence is reduced in one pass, applying `gcdEuclid()` to the accumulated result and the next value.
 
 ## Experiment 5 --- Day26 complexity connection
 
@@ -167,12 +197,47 @@ This is exactly the Day26 lesson: do not use a brute-force algorithm when the co
 
 ## Experiment 6 --- Teacher-problem connection
 
-This day helped me understand problems where the key idea is not scanning divisors, but exploiting number structure:
+The Day26 worksheet notes record these numbered teacher problems and constraints. Their stated tasks do not all directly require GCD; I distinguish the actual tool from the Day27 lesson rather than claiming a hidden GCD where one is not indicated.
 
-- Largest equal grouping -> GCD
-- Next simultaneous event -> LCM
-- Fraction reduction -> GCD
-- Many-number GCD -> repeated Euclid accumulation
+| Problem | Recorded maximum constraint | Relevant mathematical/algorithmic concept | Would a naive divisor scan fit? |
+|---|---|---|---|
+| #2 --- Robot Race | `n <= 1,000` | Compare pairs; Day26 analysis estimates `n(n-1)/2` comparisons. No GCD operation is specified by the recorded problem summary. | Not relevant to the stated pair-comparison solution. |
+| #17 --- Special Prime | `n <= 100,000`, `a_i <= 10^12` | Number theory: a number with exactly three positive divisors has a special relationship to prime numbers. This is not a GCD task; the Day27 connection is to use mathematical structure instead of scanning divisors. | No. A per-value scan to `sqrt(a_i)` could require around `10^11` checks in total. |
+| #21 --- Jump | `T <= 1,000,000` | Derive a direct arithmetic result per test instead of iterating through the distance. The recorded summary does not identify GCD as necessary. | No, if the distance may be large; iterating distance for each test is too much. |
+
+For a directly demonstrated GCD application, the two mini-problems below use the relevant tools: equal grouping uses GCD and simultaneous repeating events use LCM.
+
+## HSG mini-problems
+
+### Largest equal grouping
+
+Choice `6` computes the largest number of identical groups:
+
+```text
+Input:
+6
+24 36
+
+Output:
+12
+```
+
+There can be at most `gcd(24,36) = 12` equal groups; each group then gets 2 red and 3 blue objects.
+
+### Repeating events
+
+Choice `7` computes the next simultaneous event:
+
+```text
+Input:
+7
+6 8
+
+Output:
+24
+```
+
+This is the LCM because 24 is the smallest positive time that is a multiple of both 6 and 8. Zero inputs also return 0, as checked by the LCM challenge.
 
 ## Complexity
 
