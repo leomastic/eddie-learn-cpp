@@ -13,38 +13,17 @@ bool checkOdd(int num) {
 }
 
 int countPow(int number) {
-    if(isPrime(number)) return 1;
-
-    int pow = 0;
-    while(!checkOdd(number)) {
-        number /= 2;
-        ++pow;
-        if(!checkOdd(number)) continue;
-        break;
+    int count = 0;
+    for (int d = 2; d * d <= number; ++d) {
+        while (number % d == 0) {
+            number /= d;
+            ++count;
+        }
     }
-
-    while(number % 3 == 0) {
-        number /= 3;
-        ++pow;
-        if(number % 3 == 0) continue;
-        break;
+    if (number > 1) {
+        ++count;
     }
-
-    while(number % 5 == 0) {
-        number /= 5;
-        ++pow;
-        if(number % 5 == 0) continue;
-        break;
-    }
-
-    while(number % 7 == 0) {
-        number /= 7;
-        ++pow;
-        if(number % 7 == 0) continue;
-        break;
-    }
-
-    return pow;
+    return count;
 }
 
 int main() {
@@ -54,25 +33,16 @@ int main() {
     int N;
     if(!(std::cin >> N)) return false;
 
-    std::vector<int> num;
-    for(int i = 0; i < N; ++i) {
-        int a;
-        if(!(std::cin >> a)) return false;
-        num.push_back(a);
+    long long total = 0;
+    int maximum = 0;
+    for (int i = 0; i < N; ++i) {
+        int x;
+        std::cin >> x;
+        int count = countPow(x);
+        total += count;
+        if (count > maximum) maximum = count;
     }
-
-    int k = 0;
-    for(int i = 0; i < num.size(); ++i) {
-        k = std::max(k, countPow(num[i]));
-    }
-
-    int sumPow = 0;
-    for(int i = 0; i < num.size(); ++i) {
-        sumPow += countPow(num[i]);
-    }
-    sumPow -= k;
-
-    std::cout << sumPow << std::endl;
+    std::cout << total - maximum << '\n';
 
     return 0;
 }
