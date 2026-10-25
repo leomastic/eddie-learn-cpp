@@ -48,22 +48,33 @@ ECHO: 7
 
 ## Duration vs Distance
 
-+ Duration is the time to travel and Distance is how long it takes to the obstacle.
++ Duration is the measured round-trip travel time of the ultrasonic pulse.
 
-+ Duration is type 'long' and Distance is type 'float'
++ Distance is the calculated physical separation between the sensor and the object.
 
-+ distance = duration * 0.0343;
++ distance = duration * 0.0343 / 2.0;
 
 ## Measurement Table
 
-+ Realty: Expected Distance = 30
-  Measurement: Avernge Distance = ~28.4678
++ Realty: Expected Distance = 30cm
+  Measurement: Avernge Distance = ~28.4678cm
 
-+ Realty: Expected Distance = 20
-  Measurement: Avernge Distance = ~19.4262
++ Realty: Expected Distance = 20cm
+  Measurement: Avernge Distance = ~19.4262cm
 
-+ Realty: Expected Distance = 10
-  Measurement: Avernge Distance = ~10.4022
++ Realty: Expected Distance = 10cm
+  Measurement: Avernge Distance = ~10.4022cm
+
++ Realty: Expected Distance = 50cm
+  Measurement: Avernge Distance = ~51.99cm
+
++ Realty: Expected Distance = 100cm
+  Measurement: Avernge Distance = ~83.292933cm
+
+## 10 consecutive measurements at approximately 50 cm
+
++ test 1:
+  Avernge distance:
 
 ## Object Angle Experiment
   When the object is flat (0-degree angle), readings are accurate. When angled beyond 45-degree angle, the sound bounces away from the sensor, leading to incorrect readings or timeout (duration == 0).
