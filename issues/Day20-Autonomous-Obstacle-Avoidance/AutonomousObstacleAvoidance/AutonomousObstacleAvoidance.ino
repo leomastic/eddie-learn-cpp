@@ -38,16 +38,15 @@ const int reverseDurationMs = 800;
 // --- Stuck Detection Tracking State ---
 float lastDistance = -1.0;
 int cornerStuckCount = 0;
-const int maxCornerStuckCount = 5;     // 5 consecutive trapped turns
+const int maxCornerStuckCount = 5;
 
-// Time-based tracking for >35cm low-obstacle stuck state
 float motionStuckStartDistance = -1.0;
 unsigned long motionStuckStartTime = 0;
 bool isMotionTimerActive = false;
 
-const unsigned long motionStuckTimeoutMs = 10000; // 10 seconds safeguard
-const float minimumProgressCm = 5.0;              // Robot must cover at least 5cm to prove motion
-const float distanceTolerance = 2.0;              // Margin of error in cm for corner checks
+const unsigned long motionStuckTimeoutMs = 10000; 
+const float minimumProgressCm = 5.0;              
+const float distanceTolerance = 2.0;              
 
 Servo scanServo;
 bool isPaused = false;
@@ -122,7 +121,7 @@ float measureDistanceCm() {
 
     long duration = pulseIn(echoPin, HIGH, 30000);
 
-    // Timeout (duration == 0) means open space (> 400cm max sensor range)
+    // Timeout (duration == 0) means no echo / invalid reading
     if (duration == 0) {
         return -1.0;
     }
@@ -147,21 +146,21 @@ float measureDirection(ScanDirection direction) {
 // --- Layer 2: Specialized Stuck Decision Functions ---
 
 /**
- * Checks if an obstacle is closer than the threshold.
- * Note: -1.0 means open space (no echo), so it is NOT an obstacle!
+ * Checks if an obstacle is closer than or equal to the threshold.
+ * Treats invalid readings (-1.0) as blocked for safety.
  */
 bool isObstacleAhead(float distance) {
     if (!isValidDistance(distance)) {
-        return false; // -1.0 means infinite clear space!
+        return true; 
     }
-    return distance < obstacleDistanceCm;
+
+    return distance <= obstacleDistanceCm;
 }
 
 /**
  * Checks if the robot is stuck facing an obstacle (< 35cm) despite turning.
  */
 bool isStuckUnder35cm(float currentDistance) {
-    // Reset open-space timer since we are now in close obstacle range
     motionStuckStartTime = 0;
     motionStuckStartDistance = -1.0;
     isMotionTimerActive = false;
@@ -191,18 +190,14 @@ bool isStuckUnder35cm(float currentDistance) {
  * Checks if the robot is stuck on a low barrier (> 35cm) continuously for 10 seconds.
  */
 bool isStuckOver35cm(float currentDistance) {
-    // Reset corner count since path is open
     cornerStuckCount = 0;
 
-    // 1. Start timer if not active
     if (!isMotionTimerActive) {
         motionStuckStartTime = millis();
         motionStuckStartDistance = currentDistance;
         isMotionTimerActive = true;
     } 
-    // 2. Evaluate movement against anchor reading
     else {
-        // If distance goes from valid to -1.0 (or vice versa), the robot made progress into open space!
         bool progressMade = false;
 
         if (isValidDistance(currentDistance) != isValidDistance(motionStuckStartDistance)) {
@@ -215,13 +210,11 @@ bool isStuckOver35cm(float currentDistance) {
         }
 
         if (progressMade) {
-            // Robot moved significantly — re-anchor baseline and reset timer
             motionStuckStartTime = millis();
             motionStuckStartDistance = currentDistance;
         }
     }
 
-    // 3. Evaluate timer
     if (isMotionTimerActive) {
         unsigned long elapsed = millis() - motionStuckStartTime;
 
@@ -239,15 +232,33 @@ bool isStuckOver35cm(float currentDistance) {
 }
 
 /**
- * Chooses turn direction. Converts -1.0 (out of range) to 999.0cm so 
- * open paths are always preferred over obstacle paths.
+ * Chooses turn direction preserving the semantics of unknown/invalid (-1.0) readings.
  */
 RobotAction chooseAvoidanceAction(float rightDistance, float leftDistance) {
-    float effectiveRight = isValidDistance(rightDistance) ? rightDistance : 999.0;
-    float effectiveLeft  = isValidDistance(leftDistance)  ? leftDistance  : 999.0;
+    bool rightValid = isValidDistance(rightDistance);
+    bool leftValid  = isValidDistance(leftDistance);
 
-    // Default to turning right if both directions are equally clear
-    return (effectiveRight >= effectiveLeft) ? RobotAction::TurnRight : RobotAction::TurnLeft;
+    // Both directions invalid -> default to safety stop
+    if (!rightValid && !leftValid) {
+        return RobotAction::Stop;
+    }
+
+    // Only Left is valid -> turn Left
+    if (!rightValid) {
+        return RobotAction::TurnLeft;
+    }
+
+    // Only Right is valid -> turn Right
+    if (!leftValid) {
+        return RobotAction::TurnRight;
+    }
+
+    // Both valid -> pick the path with greater clearance (ties favor Right)
+    if (rightDistance >= leftDistance) {
+        return RobotAction::TurnRight;
+    }
+
+    return RobotAction::TurnLeft;
 }
 
 // --- Layer 3: Action Layer ---
@@ -335,6 +346,8 @@ void executeRecoverySequence() {
     } else if (action == RobotAction::TurnLeft) {
         turnLeft(TurnMode::FromStop);
         cooperativeDelay(turnDurationMs * 1.5);
+    } else {
+        stopMotors();
     }
     
     stopMotors();
@@ -377,7 +390,10 @@ void loop() {
 
     Serial.print("FRONT: ");
     if (!isValidDistance(currentDistance)) {
-        Serial.print("CLEAR (>400cm / NO ECHO)");
+        Serial.println("INVALID / NO ECHO - STOPPING FOR SAFETY");
+        stopMotors();
+        cooperativeDelay(200);
+        return;
     } else {
         Serial.print(currentDistance);
         Serial.print(" cm");
@@ -410,14 +426,17 @@ void loop() {
             } else if (action == RobotAction::TurnLeft) {
                 turnLeft(TurnMode::FromStop);
                 cooperativeDelay(turnDurationMs);
+            } else if (action == RobotAction::Stop) {
+                stopMotors();
             }
+
             stopMotors();
             cooperativeDelay(200);
         }
 
     } else {
 
-        // 2. Check stuck state for > 35cm (Triggers ONLY if stuck continuously for 10 seconds)
+        // 2. Check stuck state for > 35cm (Triggers continuously after 10s)
         if (isStuckOver35cm(currentDistance)) {
             executeRecoverySequence();
         } else {
