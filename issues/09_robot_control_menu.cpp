@@ -271,8 +271,10 @@ std::string robotModeToString(RobotMode mode) {
             return "Manual";
         case RobotMode::LineFollowing:
             return "Line Following";
-        default:
+        case RobotMode::ObstacleAvoidance:
             return "Obstacle Avoidance";
+        default:
+            return "Unknown";
     }
 }
 
@@ -307,7 +309,7 @@ std::string menuChoiceToString(MenuChoice choice) {
         case MenuChoice::ChangeMode:
             return "Change Mode";
         case MenuChoice::ChargeBattery:
-            return "Change Battery";
+            return "Charge Battery";
         case MenuChoice::DamageRobot:
             return "Damage Robot";
         case MenuChoice::DecideAction:
@@ -483,18 +485,3 @@ int main() {
     std::cout << "Goodbye!" << std::endl;
     return 0;
 }
-
-
-
-
-// Hiiii
-
-
-
-
-// Hellooooo
-
-
-
-
-// 500 dong roi nek =)))
