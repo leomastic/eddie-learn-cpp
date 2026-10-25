@@ -74,7 +74,7 @@ Technician createTechnician() {
 }
 
 void Technician::print() const {
-    std::cout << "Robot status:" << std::endl;
+    std::cout << "Technician information:" << std::endl;
     std::cout << "Technician ID: " << this->id_ << std::endl;
     std::cout << "Name: " << this->name_ << std::endl;
 
@@ -94,5 +94,5 @@ void Technician::print() const {
     }
     std::cout << std::endl;
 
-    std::cout << "Completed maintenance jobs: " << this->completedMaintenanceCount_;
+    std::cout << "Completed maintenance jobs: " << this->completedMaintenanceCount_ << std::endl;
 }

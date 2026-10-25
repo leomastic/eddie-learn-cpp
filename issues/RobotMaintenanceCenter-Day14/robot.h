@@ -41,6 +41,7 @@ public:
 
     bool startMaintenance();
     bool completeMaintenance();
+    bool cancelMaintenance();
 
     bool startCharging();
     bool chargeBattery(int amount);
