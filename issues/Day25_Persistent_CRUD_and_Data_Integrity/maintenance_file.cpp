@@ -1,15 +1,12 @@
 #include "maintenance_file.h"
 
-#include <cerrno>
-#include <cstdlib>
 #include <fstream>
-#include <limits>
 #include <string>
 
 namespace {
 
-bool parseLongLong(const std::string& text, long long& value) {
-    if (text.empty()) {
+bool isValidIdText(const std::string& text) {
+    if (text.empty() || text.size() > 9) {
         return false;
     }
 
@@ -19,38 +16,13 @@ bool parseLongLong(const std::string& text, long long& value) {
         }
     }
 
-    errno = 0;
-    char* end = nullptr;
-    const long long parsed = std::strtoll(text.c_str(), &end, 10);
-    if (errno == ERANGE || end == nullptr || *end != '\0') {
-        return false;
-    }
-
-    if (parsed < 1 || parsed > std::numeric_limits<int>::max()) {
-        return false;
-    }
-
-    value = parsed;
     return true;
 }
 
 bool isValidSeverityText(const std::string& text) {
-    if (text.empty()) {
-        return false;
-    }
-
-    for (char ch : text) {
-        if (ch < '0' || ch > '9') {
-            return false;
-        }
-    }
-
-    long long parsed = 0;
-    if (!parseLongLong(text, parsed)) {
-        return false;
-    }
-
-    return parsed >= 1 && parsed <= 5;
+    return text.size() == 1 &&
+           text[0] >= '1' &&
+           text[0] <= '5';
 }
 
 bool parseLine(const std::string& line, MaintenanceRecord& record) {
@@ -84,12 +56,13 @@ bool parseLine(const std::string& line, MaintenanceRecord& record) {
         return false;
     }
 
-    if (component.find('|') != std::string::npos || date.find('|') != std::string::npos || severityText.find('|') != std::string::npos) {
+    if (component.find('|') != std::string::npos ||
+        date.find('|') != std::string::npos ||
+        severityText.find('|') != std::string::npos) {
         return false;
     }
 
-    long long idValue = 0;
-    if (!parseLongLong(idText, idValue)) {
+    if (!isValidIdText(idText)) {
         return false;
     }
 
@@ -97,8 +70,14 @@ bool parseLine(const std::string& line, MaintenanceRecord& record) {
         return false;
     }
 
-    const int severity = static_cast<int>(std::strtol(severityText.c_str(), nullptr, 10));
-    record = MaintenanceRecord(static_cast<int>(idValue), component, date, severity, notes);
+    const int id = std::stoi(idText);
+    const int severity = std::stoi(severityText);
+
+    if (id <= 0) {
+        return false;
+    }
+
+    record = MaintenanceRecord(id, component, date, severity, notes);
     return true;
 }
 
@@ -142,7 +121,9 @@ bool loadMaintenanceLog(const std::string& filename, MaintenanceLog& log) {
             continue;
         }
 
-        loadedLog.addLoadedRecord(parsedRecord);
+        if (!loadedLog.addLoadedRecord(parsedRecord)) {
+            continue;
+        }
     }
 
     file.close();

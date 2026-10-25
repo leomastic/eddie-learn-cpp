@@ -19,7 +19,7 @@ public:
         const std::string& notes
     );
 
-    void addLoadedRecord(const MaintenanceRecord& record);
+    bool addLoadedRecord(const MaintenanceRecord& record);
 
     int getRecordCount() const;
     const MaintenanceRecord& getRecord(int index) const;

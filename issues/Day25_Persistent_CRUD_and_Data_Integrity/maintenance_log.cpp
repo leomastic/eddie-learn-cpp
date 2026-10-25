@@ -1,5 +1,7 @@
 #include "maintenance_log.h"
 
+#include <limits>
+
 namespace {
 
 bool isValidRecordValue(
@@ -25,18 +27,32 @@ int MaintenanceLog::addRecord(
         return -1;
     }
 
+    if (nextId_ >= std::numeric_limits<int>::max()) {
+        return -1;
+    }
+
     const int id = nextId_;
     records_.push_back(MaintenanceRecord(id, component, date, severity, notes));
     ++nextId_;
     return id;
 }
 
-void MaintenanceLog::addLoadedRecord(const MaintenanceRecord& record) {
+bool MaintenanceLog::addLoadedRecord(const MaintenanceRecord& record) {
+    if (record.getId() <= 0 || record.getId() >= std::numeric_limits<int>::max()) {
+        return false;
+    }
+
+    if (findRecordIndexById(record.getId()) != -1) {
+        return false;
+    }
+
     records_.push_back(record);
 
     if (record.getId() >= nextId_) {
         nextId_ = record.getId() + 1;
     }
+
+    return true;
 }
 
 int MaintenanceLog::getRecordCount() const {
