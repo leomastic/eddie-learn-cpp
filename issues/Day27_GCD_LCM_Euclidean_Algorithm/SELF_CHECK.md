@@ -1,48 +1,46 @@
 # Day27 SELF_CHECK
 
-## My answers
+## Answers
 
-1. GCD means the greatest common divisor: the largest positive integer that divides both numbers.
-2. The Vietnamese abbreviation is `ƯCLN`.
-3. LCM means the least common multiple: the smallest positive number divisible by both values.
-4. The Vietnamese abbreviation is `BCNN`.
-5. `b divides a` means `a % b == 0`.
-6. In C++, I test divisibility with `if (a % b == 0)`.
-7. Common divisors are the numbers that divide both values at the same time.
+1. GCD is the greatest common divisor: the largest positive integer that divides both numbers.
+2. The Vietnamese abbreviation for GCD is `ƯCLN`.
+3. LCM is the least common multiple: the smallest positive integer divisible by both numbers.
+4. The Vietnamese abbreviation for LCM is `BCNN`.
+5. `b` divides `a` when dividing `a` by `b` leaves remainder zero.
+6. In C++, test it with `a % b == 0` (when `b` is nonzero).
+7. Common divisors are integers that divide both numbers.
 8. `gcd(18, 24) = 6`.
-9. Coprime means the GCD is 1.
-10. No. Two coprime numbers do not both have to be prime.
-11. Example: `8` and `15` are not prime themselves, but `gcd(8, 15) = 1`.
-12. Scanning every number up to `min(a, b)` can be too slow because it may require millions, billions, or even trillions of checks when the values are huge.
-13. The Day26 habit is to read constraints first and reject brute-force solutions that are too expensive.
+9. Two integers are coprime when their GCD is 1.
+10. No. Coprime numbers do not both have to be prime.
+11. `8` and `15` are both non-prime, but `gcd(8, 15) = 1`.
+12. Scanning every integer up to `min(a, b)` can require an impractical number of checks when the values are large.
+13. The Day26 habit is to read the constraints and estimate the work before choosing an algorithm.
 14. The Euclidean identity is `gcd(a, b) = gcd(b, a % b)`.
-15. When `b` becomes `0`, the current `a` is the answer.
-16. For `gcd(48, 18)`, the first step is `48 % 18 = 12`.
-17. The pair `(48, 18)` is replaced by `(18, 12)`.
-18. Replacing `(a, b)` with `(b, a % b)` preserves the GCD because the common divisors of the old pair are exactly the common divisors of the new pair.
-19. Euclid is roughly `O(log(min(a, b)))`.
-20. Euclid is dramatically better than scanning to `10^12` because it reduces the problem by remainders, not by trying every number.
-21. `gcd(0, 25)` is `25`.
-22. `gcd(17, 0)` is `17`.
-23. `gcd(0, 0)` is `0` in this implementation.
-24. For positive integers, `gcd(a, b) * lcm(a, b) = a * b`.
-25. `a / gcd(a, b) * b` is preferred because multiplying before dividing can overflow sooner than necessary.
-26. `lcm(6, 8) = 24`.
-27. GCD simplifies a fraction by dividing numerator and denominator by their shared GCD.
-28. `42 / 56 = 3 / 4` because `gcd(42, 56) = 14`.
-29. To calculate the GCD of many numbers, iterate through the vector and keep reducing the running answer with `gcdEuclid(currentGcd, value)`.
-30. `currentGcd` can start at `0` because `gcd(0, x) = x`.
-31. If `gcd(a, b) == 1`, then `a` and `b` are coprime.
-32. Largest equal grouping suggests GCD.
-33. Next simultaneous repetition suggests LCM.
-34. GCD is useful even when a problem does not say "find the GCD" because many grouping and reduction tasks are hidden GCD problems.
-35. Constraints matter because a mathematically correct idea must still fit the problem limits.
-36. The most common mistake is updating the variables incorrectly, for example forgetting the exact step `remainder = a % b; a = b; b = remainder;`.
-37. Day27 helped me understand teacher problems about reducing fractions and grouping objects because the hidden tool was the GCD pattern.
-38. The hardest idea for me was understanding why `gcd(a, b) = gcd(b, a % b)` preserves the same common divisors.
-39. The most interesting thing I learned was that mathematics can shrink a huge problem into a tiny remainder-based computation.
-40. I still need to keep reading constraints before choosing an algorithm, because the right math matters more than just writing code quickly.
+15. When `b` becomes zero, the current `a` is the GCD.
+16. For `gcd(48, 18)`, the first step calculates `48 % 18`.
+17. `48 % 18 = 12`.
+18. The pair `(48, 18)` is replaced by `(18, 12)`.
+19. The common divisors are unchanged because a divisor of both `a` and `b` also divides `a - q*b = a % b`, and a divisor of `b` and `a % b` also divides `q*b + (a % b) = a`.
+20. Euclid takes approximately `O(log(min(a, b)))` steps.
+21. Euclid repeatedly replaces the inputs with a smaller pair of remainders, rather than checking each candidate up to `10^12`.
+22. `gcd(0, 25) = 25`.
+23. `gcd(17, 0) = 17`.
+24. In this implementation, `gcd(0, 0) = 0`.
+25. For positive integers, `gcd(a, b) * lcm(a, b) = a * b`.
+26. Divide first in `a / gcd(a, b) * b` to reduce the intermediate product and lower the risk of overflow.
+27. `lcm(6, 8) = 24`.
+28. Divide both the numerator and denominator by their GCD to simplify a fraction.
+29. `42 / 56 = 3 / 4`, because `gcd(42, 56) = 14`.
+30. Process the vector once, repeatedly calculating `gcdEuclid(currentGcd, nextValue)`.
+31. `currentGcd` can start at 0 because `gcd(0, x) = x` for nonnegative `x`.
+32. If `gcd(a, b) == 1`, then `a` and `b` are coprime.
+33. The largest equal grouping problem suggests GCD.
+34. The next simultaneous repetition problem suggests LCM.
+35. GCD can be a hidden tool when a problem asks for the largest equal grouping or a reduced fraction without naming GCD.
+36. Constraints determine whether an otherwise correct algorithm will finish within the available time and resources.
+37. I need to be careful to save `a % b` before assigning `a = b`; otherwise I can lose the old values needed for the next state.
+38. Teacher Problem #17 (Special Prime) helped me practice checking constraints before attempting divisor enumeration. Its recorded limits are `n <= 100,000` and `a_i <= 10^12`; it is a number-theory connection, not a direct GCD problem.
+39. The hardest idea for me was understanding why replacing `(a, b)` with `(b, a % b)` preserves exactly the same common divisors.
+40. The most interesting thing I learned was that a remainder can replace a huge divisor search with only a small number of steps.
 
-## Completion note
-
-I checked the key Day27 concepts: divisibility, GCD, LCM, coprime numbers, Euclid's algorithm, vector GCD reduction, and fraction simplification. The project builds successfully and the sample challenge outputs match the expected reasoning.
+Questions 37--40 are personal reflections and should be reviewed and edited to match my own experience.
