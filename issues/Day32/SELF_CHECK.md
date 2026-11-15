@@ -5,23 +5,25 @@ the student to answer. The other answers are based on the source files and
 problem statements available here.
 
 1. **Which problem did you attempt first? Why?**  
-   problem 1
+   Problem 1; the reason was not recorded.
 
 2. **How long did you spend reading the full exam?**  
-   5hr
+   Unknown. “5hr” was previously entered, but that exceeds the 150-minute
+   exam duration and should not be treated as a valid reading-time answer.
+   Replace it only if you remember the actual time.
+
 3. **Which problem took the most time?**  
-   all the same
+   You reported that they all took about the same amount of time.
 
 4. **Did you complete all five problems within 150 minutes?**  
    no
 
 5. **What is the largest possible digit-weighted checksum in Problem 1's
    constraints?**  
-   The exact maximum depends on the maximum allowed value of the lock code,
-   which is not present in the available Problem 1 statement. If all
-   `d`-digit values through `99...9` are allowed, the maximum is
-   `9 × (1 + 2 + ... + d) = 9d(d + 1)/2`. Use the actual constraint to get the
-   exact answer.
+   With a maximum lock code of 10^18, the largest checksum is 1539, attained
+   by 999,999,999,999,999,999: each of its 18 digits is 9, so the checksum is
+   `9 × (1 + 2 + ... + 18) = 9 × 171 = 1539`. The value 10^18 itself has
+   checksum 1.
 
 6. **What happens if the lock code contains zero digits internally?**  
    A zero contributes zero to the checksum, but still occupies its digit
@@ -32,9 +34,9 @@ problem statements available here.
    characters would make it a subsequence, not a substring.
 
 8. **How is a tie for maximum substring length resolved?**  
-   In the current code, the earliest starting position is retained because
-   starts are checked from left to right and the answer changes only for a
-   strictly longer substring.
+   The sliding-window solution updates only when a strictly longer window is
+   found. As right endpoints are processed in increasing order, this keeps
+   the earliest starting position among equal maximum lengths.
 
 9. **What should Problem 2 output when `K=0`?**  
    The current code outputs `0 0`.
@@ -76,9 +78,9 @@ problem statements available here.
 
 19. **Describe a real mistake or uncertainty you encountered, and how you
     handled it. Your own experience only.**  
-    i dont remember
+    You reported that you do not remember a specific incident. Add one only
+    if an actual example comes to mind.
 
 20. **If you took this exam again, how would you allocate the 150 minutes
     differently? Your own reflection only.**  
-    i dont know
-
+    You reported that you do not know yet.

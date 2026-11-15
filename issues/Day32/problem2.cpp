@@ -10,30 +10,33 @@ int main() {
     cin >> n >> k >> s;
 
     if(k == 0) {
-        cout << "0 0";
+        cout << "0 0\n";
         return 0;
     }
 
-    int bestlen = 1;
-    int ssp = 1;
-    int i = 0;
+    vector<int> frequency(26, 0);
+    int distinct = 0;
+    int left = 0;
+    int bestlen = 0;
+    int beststart = 0;
 
-    while(i < n) {
-        set<char> chars = {s[i]};
-        for(int j = i; j < n; ++j) {
-            chars.insert(s[j]);
-            int len = j - i + 1;
-            if(len > bestlen && chars.size() <= k) {
-                bestlen = len;
-                ssp = i + 1;
-            }
-            else if(chars.size() > k) {
-                break;
-            }
+    for(int right = 0; right < n; ++right) {
+        int current = s[right] - 'a';
+        if(frequency[current]++ == 0) ++distinct;
+
+        while(distinct > k) {
+            int removed = s[left] - 'a';
+            if(--frequency[removed] == 0) --distinct;
+            ++left;
         }
-        ++i;
+
+        int len = right - left + 1;
+        if(len > bestlen) {
+            bestlen = len;
+            beststart = left;
+        }
     }
 
-    cout << bestlen << " " << ssp;
+    cout << bestlen << " " << beststart + 1 << '\n';
     return 0;
 }

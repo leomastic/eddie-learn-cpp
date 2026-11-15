@@ -23,15 +23,16 @@ complete rather than estimated.
 ### Help used
 
 AI assistance was used in this conversation to implement or revise Problems 3,
-4, and 5, and to compile and test those solutions. The conversation does not
-establish whether that work took place during the timed exam or afterward.
-Confirm the timing and record whether help was used during the 150-minute
-attempt; do not describe the attempt as unaided if this assistance occurred
-during it.
+4, and 5 and, after the review described below, to fix Problems 1 and 2. The
+timing of the work on Problems 3–5 relative to the exam is not established.
+The changes to Problems 1 and 2 in this turn are post-review improvements.
+Confirm whether any AI assistance was used during the 150-minute attempt;
+do not describe that attempt as unaided if it was.
 
 ### Expected score before post-exam tests
 
-5hr
+Not recorded. The 15/20 score below is a technical assessment reported after
+testing, not a recorded pre-test expected score.
 
 ## Solutions
 
@@ -42,42 +43,42 @@ when each implementation was written.
 
 Source: [`problem1.cpp`](./problem1.cpp)
 
-- **Approach:** Convert the integer to a decimal string. Multiply each digit by
-  its 1-based position from the left and add the products. Print the checksum
-  and whether it is divisible by `k`.
+- **Approach:** Read the lock code as a string so values through 10^18 are not
+  limited by 32-bit integer storage. Multiply each digit by its 1-based
+  position from the left, add the products, and print the checksum and whether
+  it is divisible by `k`.
 - **Correctness:** The loop visits every decimal digit once and applies the
   position weight used by the checksum definition. The divisibility test then
   directly implements the validity condition.
-- **Complexity:** For `d` digits, O(d) time and O(d) additional space for the
-  string.
-- **Subtasks:** The source is linear in the number of digits, so it should fit
-  any reasonable stated integer limit, assuming the input fits `int` and `k`
-  is nonzero. The Problem 1 limits and subtask definitions are not included in
-  the available record, so exact subtask claims need checking against the exam
-  statement.
-- **Tests:** No sample or boundary-test result for this problem is recorded
-  here.
+- **Complexity:** For `d` digits, O(d) time and O(d) space for the input string.
+- **Subtasks:** The review report awarded 1/4 to the original version because
+  its `int` input could not handle the stated upper bound of 10^18. The current
+  string-based version avoids that overflow and has O(d) runtime.
+- **Tests:** `1000000000000 1` produced `1 VALID`. The maximum checksum input
+  `999999999999999999 1539` produced `1539 VALID`; `1000000000000000000 2`
+  produced `1 INVALID`. These focused checks were run after the review.
 
 ### Problem 2 — Longest substring with at most K distinct characters
 
 Source: [`problem2.cpp`](./problem2.cpp)
 
-- **Approach:** Try each starting index and extend the substring one character
-  at a time, keeping a set of its distinct characters. Stop extending once
-  the set contains more than `k` characters. Save a new answer only when its
-  length is strictly greater than the best seen so far.
-- **Correctness:** Every possible start is considered, and every valid
-  extension from that start is checked. Once the number of distinct characters
-  exceeds `k`, a longer extension cannot become valid again. Since equal
-  lengths do not replace the saved answer and starts are visited left to
-  right, ties retain the earliest starting position.
-- **Complexity:** O(n² log σ) worst-case time, where `σ` is the number of
-  distinct characters in the input; O(σ) auxiliary space for the set.
-- **Subtasks:** The quadratic search is suitable only for small input sizes.
-  The Problem 2 limits and subtask definitions are not included in the
-  available record, so the exact subtasks passed cannot be confirmed.
-- **Tests:** No sample or boundary-test result for this problem is recorded
-  here.
+- **Approach:** Use a sliding window and a frequency array for the lowercase
+  English alphabet. Expand the right edge, and move the left edge forward
+  until the window contains at most `k` distinct characters.
+- **Correctness:** After shrinking, the current window is valid. Every right
+  endpoint is considered, and the left endpoint moves forward as needed to
+  restore validity. Recording only strictly longer windows preserves the
+  earliest start among equal maximum lengths.
+- **Complexity:** O(n) time because each pointer moves at most `n` times, and
+  O(26) auxiliary space.
+- **Subtasks:** The review report awarded 2/4 to the original quadratic
+  version. The current linear sliding-window version is suitable for the
+  reported `n = 200,000` limit.
+- **Tests:** `aabbaa` with `k=1` produced length 2, start 1, and `abac` with
+  `k=2` produced length 3, start 1, confirming the earliest-start tie rule.
+  `K=0` produced `0 0`. A 200,000-character all-`a` string with `k=1`
+  produced length 200,000, start 1. These focused checks were run after the
+  review.
 
 ### Problem 3 — Prime factor queries
 
@@ -138,30 +139,44 @@ Source: [`problem5.cpp`](./problem5.cpp)
 
 | Problem | Sample test | Additional test | Failed tests recorded |
 |---|---|---|---|
-| 1 | Not recorded | Not recorded | None recorded |
-| 2 | Not recorded | Not recorded | None recorded |
+| 1 | Review example checked after fix | Maximum bound checked after fix | Original `int` version failed for large input |
+| 2 | Not recorded | 200,000-character cases checked after fix | Original quadratic version timed out at maximum size in review |
 | 3 | Passed | Passed | None recorded |
 | 4 | Passed | Passed | None recorded |
 | 5 | Passed | Passed | None recorded |
 
-“None recorded” means no failure appears in the available test history; it
-does not mean unrecorded tests were run.
+The review report states it compiled the original code with C++17, ran 500
+random small tests, and tested selected large inputs. Those reported results
+are attributed to the reviewer; they were not all independently rerun during
+the current changes. The focused checks in the post-review sections were run
+separately.
+
+## Review-reported technical assessment
+
+The supplied review reported **15/20** for the pre-fix code: Problem 1 1/4,
+Problem 2 2/4, and Problems 3–5 4/4 each. The report attributed the lost
+points to Problem 1's 32-bit input and Problem 2's quadratic runtime. This is
+a reviewer-reported technical assessment, not a verified independent score
+for a timed exam attempt. The review also stated that the independent
+150-minute result could not be verified.
 
 ## Exam work and post-exam work
 
 ### Work completed during the 150-minute exam
 
-The timing of the code work in the available conversation cannot be matched
-to the exam window. The files for Problems 1 and 2 were already present when
-this conversation inspected them. Problems 3, 4, and 5 were implemented or
-revised with AI assistance during this conversation. Confirm which of those
-activities occurred inside the timed attempt and list them here; do not
-attribute work to the exam solely from the current source files.
+You reported that you did not complete all five problems within the
+150-minute exam. The actual work performed during that attempt cannot be
+reconstructed from the available records. Problems 1 and 2 had pre-existing
+source files when this conversation began, but their existence does not
+establish when they were written. The reviewer reported that the independent
+timed result was not verifiable. Do not treat 15/20 as an independently
+achieved exam score.
 
 ### Post-exam improvements and checks
 
-This conversation includes implementation or revision of Problems 3, 4, and
-5 and compilation/sample or boundary checks for those solutions. Whether
-these were post-exam actions or part of the timed attempt is not established.
-Once confirmed, move each activity into the appropriate section above.
-
+Problems 3–5 were implemented or revised with AI assistance in this
+conversation and compiled/tested with samples or focused boundary checks.
+After the technical review, Problems 1 and 2 were also revised with AI
+assistance: Problem 1 now reads the lock code as a string, and Problem 2 now
+uses a sliding window. These Problem 1 and 2 changes and their focused checks
+are post-review improvements, not work completed during the original exam.
