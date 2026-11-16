@@ -5,15 +5,13 @@ the student to answer. The other answers are based on the source files and
 problem statements available here.
 
 1. **Which problem did you attempt first? Why?**  
-   Problem 1; the reason was not recorded.
+   i didnt record.
 
 2. **How long did you spend reading the full exam?**  
-   Unknown. “5hr” was previously entered, but that exceeds the 150-minute
-   exam duration and should not be treated as a valid reading-time answer.
-   Replace it only if you remember the actual time.
+   i didnt record
 
 3. **Which problem took the most time?**  
-   You reported that they all took about the same amount of time.
+   i didnt record
 
 4. **Did you complete all five problems within 150 minutes?**  
    no
@@ -77,10 +75,7 @@ problem statements available here.
     test whether `(Ai + Aj) % M == 0`.
 
 19. **Describe a real mistake or uncertainty you encountered, and how you
-    handled it. Your own experience only.**  
-    You reported that you do not remember a specific incident. Add one only
-    if an actual example comes to mind.
+    i didnt record
 
 20. **If you took this exam again, how would you allocate the 150 minutes
-    differently? Your own reflection only.**  
-    You reported that you do not know yet.
+    i didnt record

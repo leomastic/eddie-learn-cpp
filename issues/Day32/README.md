@@ -14,11 +14,11 @@ complete rather than estimated.
 
 | Problem | Time spent |
 |---|---|
-| Problem 1 | [Fill in] |
-| Problem 2 | [Fill in] |
-| Problem 3 | [Fill in] |
-| Problem 4 | [Fill in] |
-| Problem 5 | [Fill in] |
+| Problem 1 | i didnt record |
+| Problem 2 | [i didnt record |
+| Problem 3 | i didnt record|
+| Problem 4 | i didnt record |
+| Problem 5 | [i didnt record|
 
 ### Help used
 
@@ -141,9 +141,9 @@ Source: [`problem5.cpp`](./problem5.cpp)
 |---|---|---|---|
 | 1 | Review example checked after fix | Maximum bound checked after fix | Original `int` version failed for large input |
 | 2 | Not recorded | 200,000-character cases checked after fix | Original quadratic version timed out at maximum size in review |
-| 3 | Passed | Passed | None recorded |
-| 4 | Passed | Passed | None recorded |
-| 5 | Passed | Passed | None recorded |
+| 3 | Passed | Passed |i didnt record|
+| 4 | Passed | Passed | i didnt record |
+| 5 | Passed | Passed | i didnt record |
 
 The review report states it compiled the original code with C++17, ran 500
 random small tests, and tested selected large inputs. Those reported results
@@ -180,3 +180,4 @@ After the technical review, Problems 1 and 2 were also revised with AI
 assistance: Problem 1 now reads the lock code as a string, and Problem 2 now
 uses a sliding window. These Problem 1 and 2 changes and their focused checks
 are post-review improvements, not work completed during the original exam.
+  
